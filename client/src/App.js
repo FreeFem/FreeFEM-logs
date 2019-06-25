@@ -7,7 +7,7 @@ import Footer from './components/Footer'
 import APICheck from './components/APICheck'
 
 import Logs from './components/logs/Logs.js'
-import Coverage from './components/Coverage.js';
+import Coverage from './components/coverage/Coverage.js';
 import Flags from './components/Flags.js';
 
 class App extends React.Component {
