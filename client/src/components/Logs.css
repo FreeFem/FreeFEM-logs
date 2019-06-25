@@ -1,0 +1,78 @@
+.LogList {
+	flex: 1 1 auto;
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr 1fr 1fr 3fr;
+	background-color: #eee;
+	border: 0.1rem solid #282c34;
+	overflow: hidden;
+}
+
+.LogList article {
+	display: flex;
+	flex-direction: column;
+	border-right: 0.1rem solid #282c34;
+	overflow: hidden;
+}
+
+.LogList article h2 {
+	padding: 0.75rem;
+	border-bottom: 0.1rem solid #282c34;
+}
+
+.LogList article div {
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.LogList article button {
+	background: none;
+	border: 0.1rem solid #ccc;
+	padding: 0.5rem;
+	margin: 0.5rem;
+	color: black;
+	word-break: break-all;
+}
+
+.LogList article button:hover {
+	background-color: white;
+}
+
+.Jobs {
+}
+
+.Directories {
+}
+
+.Files {
+}
+
+.Content {
+	border: none !important;
+}
+
+.Content pre {
+	overflow-y: auto;
+	overflow-x: hidden;
+	white-space: pre-wrap;
+	background-color: white;
+	padding: 1rem;
+}
+
+@media screen and (max-width: 640px) {
+	.LogList {
+		grid-template-rows: auto auto auto auto;
+		grid-template-columns: auto;
+	}
+
+	.LogList article {
+		border-right: none;
+		border-bottom: 0.1rem solid #282c34;
+	}
+
+	.Content pre {
+		min-height: 100vh;
+		overflow-y: auto;
+	}
+}

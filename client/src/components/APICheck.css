@@ -1,0 +1,29 @@
+.api-check {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.api-check p {
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+  color: white;
+  font-weight: 600;
+}
+
+.api-check.success p {
+  background-color: rgba(0, 255, 0, 0.75);
+}
+
+.api-check.failure p {
+  background-color: rgba(255, 0, 0, 0.75);
+}
+
+.api-check.hide {
+  max-height: 0;
+}
