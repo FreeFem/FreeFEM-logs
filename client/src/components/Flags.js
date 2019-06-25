@@ -1,12 +1,6 @@
-import React, {Component} from 'react'
+import React from 'react'
 
-
-class Flags extends Component {
-	constructor(props) {
-		super(props)
-
-	}
-	
+class Flags extends React.Component {
 	render() {
 		return (
 			<p>Display flags</p>

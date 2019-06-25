@@ -10,6 +10,7 @@ var getLogJobs = require('./routes/getLogJobs');
 var getLogDirectories = require('./routes/getLogDirectories');
 var getLogFiles = require('./routes/getLogFiles');
 var getLogContent = require('./routes/getLogContent');
+var getCoverageFile = require('./routes/getCoverageFile');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use('/getLogJobs', getLogJobs);
 app.use('/getLogDirectories', getLogDirectories);
 app.use('/getLogFiles', getLogFiles);
 app.use('/getLogContent', getLogContent);
+app.use('/getCoverageFile', getCoverageFile);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -37,7 +39,6 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.send({status: 'error'});
 });

@@ -10,7 +10,7 @@ class Header extends React.Component {
 				<Link to='/'>
 					<img src={logo} alt="logo" />
 					<div>
-						<h1>Unit-tests</h1>
+						<h1>FreeFEM Logs</h1>
 					</div>
 				</Link>
 			</header>

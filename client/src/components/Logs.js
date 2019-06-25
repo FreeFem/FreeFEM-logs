@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import './Logs.css'
 
 export const API = process.env.REACT_APP_API || 'http://localhost:9000/'
@@ -10,7 +10,7 @@ export const COLOR_YELLOW = 'yellow'
 export const COLOR_ORANGE = 'orange'
 export const COLOR_RED = 'red'
 
-class Logs extends Component {
+class Logs extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
