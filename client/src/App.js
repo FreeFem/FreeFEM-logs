@@ -6,7 +6,7 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import APICheck from './components/APICheck'
 
-import Logs from './components/Logs.js'
+import Logs from './components/logs/Logs.js'
 import Coverage from './components/Coverage.js';
 import Flags from './components/Flags.js';
 

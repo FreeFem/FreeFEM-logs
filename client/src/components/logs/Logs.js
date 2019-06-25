@@ -36,6 +36,9 @@ class Logs extends React.Component {
 			}
 		}).then(response => response.json())
 		.then(response => {
+			if (response.status !== undefined && response.status === 'error')
+				return
+
 			const jobs = response
 
 			const logs = {}

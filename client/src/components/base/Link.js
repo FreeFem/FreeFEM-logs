@@ -14,7 +14,7 @@ class Link extends React.Component {
 
 	render() {
 		return (
-			<a class="Link" href={this.props.href} target={this.props.target ? this.props.target : '_blank'} rel={this.state.rel}>{this.props.text}</a>
+			<a className="Link" href={this.props.href} target={this.props.target ? this.props.target : '_blank'} rel={this.state.rel}>{this.props.text}</a>
 		)
 	}
 }
