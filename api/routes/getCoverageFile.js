@@ -18,23 +18,23 @@ router.post('/', function(req, res, next) {
 
 	title = $('td[class=title]').text()
 	
-	let rulers = $('td[class=ruler]') // <-- used to know where tf we are in the html
-	let summaryTdHeaders = rulers.nextAll('td[class=headerItem]')
+	let rulers = $('td[class=ruler]').toArray() // <-- used to know where tf we are in the html
+	//let summaryTdHeaders = rulers[0].nextAll('td[class=headerItem]')
+	/*
 	summaryTdHeaders.each(tdHeader => {
-				let tdElts = []
-				tdElts.push(tdHeader)
-				tdHeader.nextAll().each(tdElt => {
-					tdElts.push(tdElt)
-				}
-			)
+			let tdElts = [tdHeader]
+			tdHeader.nextAll().each(tdElt => {
+				tdElts.push(tdElt)
+			})
+			summary.push(tdElts)
 		}
 	)
-
+	*/
 	const output = {
 		title: title,
 		summary: summary,
-		contentHeader: [],
-		content: []
+		contentHeader: [[]],
+		content: [[]]
 	}
 
 	console.log(output)
