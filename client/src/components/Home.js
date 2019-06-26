@@ -14,7 +14,8 @@ class Home extends React.Component {
 				coverageDate: '',
 				lineCoverage: '',
 				functionCoverage: ''
-			}
+			},
+			coverageList: ''
 		}
 	}
 	
@@ -27,22 +28,29 @@ class Home extends React.Component {
 		})
 		.then(res => res.json())
 		.then(res => {
+			const coverageList = 
+				<ul>
+					<li><b>Last run:</b> {this.state.coverage.coverageDate}</li>
+					<li><b>Lines covered:</b> {this.state.coverage.lineCoverage}</li>
+					<li><b>Functions covered:</b> {this.state.coverage.functionCoverage}</li>
+				</ul>
 			this.setState(prevState => ({
 				...prevState,
 				coverage: {
 					coverageDate: res.coverageDate,
 					lineCoverage: res.lineCoverage,
 					functionCoverage: res.functionCoverage
-				}
+				},
+				coverageList: coverageList
 			}))
 		})
 		.catch(err => console.log(err))
 	}
 	
-	gotoCoverage = () => {
+	goto = (url) => {
 		this.setState(prevState => ({
 			...prevState,
-			redirect: 'coverage'
+			redirect: url
 		}))
 	}
 	
@@ -52,18 +60,18 @@ class Home extends React.Component {
 			
 		return (
 			<div className="Home">
-        <div className="home-logs">
+        <div className="home-logs" onClick={() => this.goto('logs')}>
           <h1>Logs report</h1>
           <p>summary</p>
         </div>
-        <div className="home-coverage" onClick={() => this.gotoCoverage()}>
+        <div className="home-coverage" onClick={() => this.goto('coverage')}>
           <h1>Coverage report</h1>
           <p><b>Last run:</b> {this.state.coverage.coverageDate}</p>
 					<p><b>Lines covered:</b> {this.state.coverage.lineCoverage}</p>
 					<p><b>Functions covered:</b> {this.state.coverage.functionCoverage}</p>
         </div>
-        <div className="home-time">
-          <h1>Time report</h1>
+        <div className="home-timing" onClick={() => this.goto('timing')}>
+          <h1>Timing report</h1>
           <p>summary</p>
         </div>
       </div>

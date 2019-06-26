@@ -10,6 +10,7 @@
 
 .Home div {
   padding: 1rem;
+  cursor: pointer;
 }
 
 .Home div:hover {
