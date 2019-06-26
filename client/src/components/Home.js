@@ -1,5 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import './Home.css'
+
+import { Redirect } from 'react-router-dom'
 
 export const API = process.env.REACT_APP_API || 'http://localhost:9000/'
 
@@ -7,6 +9,7 @@ class Home extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			redirect: '',
 			coverage: {
 				coverageDate: '',
 				lineCoverage: '',
@@ -35,20 +38,27 @@ class Home extends React.Component {
 		.catch(err => console.log(err))
 	}
 	
+	gotoCoverage = () => {
+		this.setState({redirect: 'coverage'})
+	}
+	
 	render() {
+		if (this.state.redirect === 'coverage')
+			return <Redirect push to='coverage/' />
+			
 		return (
-			<div>
-        <div class="home-logs">
+			<div className="Home">
+        <div className="home-logs">
           <h1>Logs report</h1>
           <p>summary</p>
         </div>
-        <div class="home-coverage">
+        <div className="home-coverage" onClick={() => this.gotoCoverage()}>
           <h1>Coverage report</h1>
-          <p>Last run: {this.state.coverage.coverageDate}</p>
-					<p>Lines covered: {this.state.coverage.lineCoverage}</p>
-					<p>Functions covered: {this.state.coverage.functionCoverage}</p>
+          <p><b>Last run:</b> {this.state.coverage.coverageDate}</p>
+					<p><b>Lines covered:</b> {this.state.coverage.lineCoverage}</p>
+					<p><b>Functions covered:</b> {this.state.coverage.functionCoverage}</p>
         </div>
-        <div class="home-time">
+        <div className="home-time">
           <h1>Time report</h1>
           <p>summary</p>
         </div>

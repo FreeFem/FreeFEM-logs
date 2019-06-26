@@ -1,0 +1,17 @@
+.Home {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.Home h1 {
+  color: #555;
+}
+
+.Home div {
+  padding: 1rem;
+}
+
+.Home div:hover {
+  background-color: rgba(200, 200, 200, 0.5);
+}
