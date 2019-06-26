@@ -11,6 +11,7 @@ var getLogDirectories = require('./routes/getLogDirectories');
 var getLogFiles = require('./routes/getLogFiles');
 var getLogContent = require('./routes/getLogContent');
 var getCoverageFile = require('./routes/getCoverageFile');
+var getCoverageSummary = require('./routes/getCoverageSummary');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/getLogDirectories', getLogDirectories);
 app.use('/getLogFiles', getLogFiles);
 app.use('/getLogContent', getLogContent);
 app.use('/getCoverageFile', getCoverageFile);
+app.use('/getCoverageSummary', getCoverageSummary);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
