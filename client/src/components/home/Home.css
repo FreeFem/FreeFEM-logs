@@ -8,11 +8,21 @@
   color: #555;
 }
 
-.Home div {
+.Home > div {
   padding: 1rem;
   cursor: pointer;
 }
 
-.Home div:hover {
+.Home div.home-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.Home div.home-item {
+  padding: 0.5rem;
+  font-weight: bold;
+}
+
+.Home > div:hover {
   background-color: rgba(200, 200, 200, 0.5);
 }

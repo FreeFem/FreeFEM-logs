@@ -10,12 +10,12 @@ class Home extends React.Component {
 		super(props)
 		this.state = {
 			redirect: '',
+			jobs: '',
 			coverage: {
 				coverageDate: '',
 				lineCoverage: '',
 				functionCoverage: ''
-			},
-			coverageList: ''
+			}
 		}
 	}
 	
@@ -28,23 +28,35 @@ class Home extends React.Component {
 		})
 		.then(res => res.json())
 		.then(res => {
-			const coverageList = 
-				<ul>
-					<li><b>Last run:</b> {this.state.coverage.coverageDate}</li>
-					<li><b>Lines covered:</b> {this.state.coverage.lineCoverage}</li>
-					<li><b>Functions covered:</b> {this.state.coverage.functionCoverage}</li>
-				</ul>
 			this.setState(prevState => ({
 				...prevState,
 				coverage: {
 					coverageDate: res.coverageDate,
 					lineCoverage: res.lineCoverage,
 					functionCoverage: res.functionCoverage
-				},
-				coverageList: coverageList
+				}
 			}))
 		})
 		.catch(err => console.log(err))
+		
+		// fetch(API+'getLogJobs', {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		'Access-Control-Allow-Origin': '*'
+		// 	}
+		// })
+		// .then(res => res.json())
+		// .then(res => {
+			// const jobs = new Array()
+			// console.log(typeof jobs)
+			// for (let i = 0; i < res.length; i++)
+			// 	jobs[i] = res[i]
+			// console.log(typeof jobs)
+			// this.setState(prevState => ({
+			// 	...prevState,
+			// 	jobs: res
+			// }))
+		// })
 	}
 	
 	goto = (url) => {
@@ -57,18 +69,33 @@ class Home extends React.Component {
 	render() {
 		if (this.state.redirect)
 			return <Redirect push to={this.state.redirect} />
-			
+		
+		// const jobs = this.state.jobs
+		// const jobsList = jobs.map(job =>
+		// 	<li key={job}>{job}</li>
+		// )
 		return (
 			<div className="Home">
         <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
           <h1>Logs report</h1>
-          <p>summary</p>
+          <div className="home-item">
+						Jobs:
+					</div>
+					<div className="home-value">
+						<ul>
+						</ul>
+					</div>
         </div>
         <div className="home-coverage" onClick={() => this.goto(COVERAGE_URL)}>
           <h1>Coverage report</h1>
-          <p><b>Last run:</b> {this.state.coverage.coverageDate}</p>
-					<p><b>Lines covered:</b> {this.state.coverage.lineCoverage}</p>
-					<p><b>Functions covered:</b> {this.state.coverage.functionCoverage}</p>
+					<div className="home-grid">
+	          <div className="home-item">Last run:</div>
+						<div className="home-value">{this.state.coverage.coverageDate}</div>
+						<div className="home-item">Lines covered:</div>
+						<div className="home-value{this.state.lineCoverageStyle}">{this.state.coverage.lineCoverage}</div>
+						<div className="home-item">Functions covered:</div>
+						<div className="home-value">{this.state.coverage.functionCoverage}</div>
+					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>
           <h1>Timing report</h1>

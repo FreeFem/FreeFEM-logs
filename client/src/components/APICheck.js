@@ -29,25 +29,29 @@ class Footer extends React.Component {
 		.then(res => res.json())
 		.then(res => {
 			if (res.api === 'ok') {
-				this.setState({
-					status: 'api-check success',
-					text: successText
-				})
+				this.APISuccess()
+				setTimeout(() => this.setState({status: 'api-check hide'}), 3000)
 			} else {
-				this.setState({
-					status: 'api-check failure',
-					text: failureText
-				})
+				this.APIError()
 			}
 		})
 		.catch(error => {
-			this.setState({
-				status: 'api-check failure',
-				text: failureText
-			})
+			this.APIError()
 		})
-
-		setTimeout(() => this.setState({status: 'api-check hide'}), 3000)
+	}
+	
+	APISuccess = () => {
+		this.setState({
+			status: 'api-check success',
+			text: successText
+		})
+	}
+	
+	APIError = () => {
+		this.setState({
+			status: 'api-check failure',
+			text: failureText
+		})
 	}
 
 	render() {

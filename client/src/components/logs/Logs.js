@@ -1,7 +1,8 @@
 import React from 'react'
 import './Logs.css'
 
-export const API = process.env.REACT_APP_API || 'http://localhost:9000/'
+import { API } from '../../config/Config'
+
 export const LOW_LIMIT = 0
 export const MID_LIMIT = 10
 export const HIGH_LIMIT = 20
