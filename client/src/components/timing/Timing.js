@@ -1,6 +1,6 @@
 import React from 'react'
 
-class Flags extends React.Component {
+class Timing extends React.Component {
 	render() {
 		return (
 			<p>Display flags</p>
@@ -8,4 +8,4 @@ class Flags extends React.Component {
 	}
 }
 
-export default Flags;
+export default Timing;

@@ -1,6 +1,8 @@
 import React from 'react'
 import './APICheck.css'
 
+import { API } from '../config/Config'
+
 const successText = 'API correctly connected'
 const failureText = 'API connection failure'
 
@@ -18,7 +20,7 @@ class Footer extends React.Component {
 	}
 
 	checkAPI() {
-		fetch('http://localhost:9000', {
+		fetch(API, {
 			method: 'GET',
 			headers: {
 				'Access-Control-Allow-Origin': '*'

@@ -1,26 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Home = 'Home'
-const Logs = 'Logs'
-const Coverage = 'Coverage'
-const Flags = 'Flags'
+import { HOME_NAME, HOME_URL,
+	LOGS_NAME, LOGS_URL,
+	COVERAGE_NAME, COVERAGE_URL,
+	TIMING_NAME, TIMING_URL } from '../config/Config'
 
 class Nav extends React.Component {
 	render() {
 		return (
 			<nav>
 				<div>
-					<Link to='/'>{Home}</Link>
+					<Link to={HOME_URL}>{HOME_NAME}</Link>
 				</div>
 				<div>
-					<Link to='/logs'>{Logs}</Link>
+					<Link to={LOGS_URL}>{LOGS_NAME}</Link>
 				</div>
 				<div>
-					<Link to='/coverage'>{Coverage}</Link>
+					<Link to={COVERAGE_URL}>{COVERAGE_NAME}</Link>
 				</div>
 				<div>
-					<Link to='/flags'>{Flags}</Link>
+					<Link to={TIMING_URL}>{TIMING_NAME}</Link>
 				</div>
 			</nav>
 		)

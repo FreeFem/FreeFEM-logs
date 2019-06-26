@@ -3,7 +3,7 @@ import './Home.css'
 
 import { Redirect } from 'react-router-dom'
 
-export const API = process.env.REACT_APP_API || 'http://localhost:9000/'
+import { API, LOGS_URL, COVERAGE_URL, TIMING_URL } from '../../config/Config'
 
 class Home extends React.Component {
 	constructor(props) {
@@ -55,22 +55,22 @@ class Home extends React.Component {
 	}
 	
 	render() {
-		if (this.state.redirect === 'coverage')
-			return <Redirect push to='coverage/' />
+		if (this.state.redirect)
+			return <Redirect push to={this.state.redirect} />
 			
 		return (
 			<div className="Home">
-        <div className="home-logs" onClick={() => this.goto('logs')}>
+        <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
           <h1>Logs report</h1>
           <p>summary</p>
         </div>
-        <div className="home-coverage" onClick={() => this.goto('coverage')}>
+        <div className="home-coverage" onClick={() => this.goto(COVERAGE_URL)}>
           <h1>Coverage report</h1>
           <p><b>Last run:</b> {this.state.coverage.coverageDate}</p>
 					<p><b>Lines covered:</b> {this.state.coverage.lineCoverage}</p>
 					<p><b>Functions covered:</b> {this.state.coverage.functionCoverage}</p>
         </div>
-        <div className="home-timing" onClick={() => this.goto('timing')}>
+        <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>
           <h1>Timing report</h1>
           <p>summary</p>
         </div>
