@@ -6,32 +6,38 @@ var cheerio = require('cheerio')
 
 /* Get coverage html */
 router.post('/', function(req, res, next) {
-	var file = req.body.file
+	const file = req.body.file
 	console.log('file: '+file)
-	var htmlString = fs.readFileSync(file)
+	const htmlContent = fs.readFileSync(file)
+	const $ = cheerio.load(htmlContent.toString())
+
+	let title
+	let summary = [[]]
+	let contentHeader = [[]]
+	let content = [[]]
+
+	title = $('td[class=title]').text()
 	
-	var $ = cheerio.load(htmlString)
-	
-	var content = $('td')
-		.filter((_, td) => $(td).attr('class') !== undefined)
-		.map((_, td) => (
-			{
-				class: $(td).attr('class'),
-				text: $(td).text()
-			}
-		));
-	
-	//content.map((_, td) => console.log('class: '+td.class+' text: '+td.text))
-	
-	var output = {};
-	content.map((_, td) => output[_] =
-	{
-		class: td.class,
-		test: td.text
-	})
-	
+	let rulers = $('td[class=ruler]') // <-- used to know where tf we are in the html
+	let summaryTdHeaders = rulers.nextAll('td[class=headerItem]')
+	summaryTdHeaders.each(tdHeader => {
+				let tdElts = []
+				tdElts.push(tdHeader)
+				tdHeader.nextAll().each(tdElt => {
+					tdElts.push(tdElt)
+				}
+			)
+		}
+	)
+
+	const output = {
+		title: title,
+		summary: summary,
+		contentHeader: [],
+		content: []
+	}
+
 	console.log(output)
-	
 	res.send(output)
 });
 

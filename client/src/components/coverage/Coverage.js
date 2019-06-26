@@ -16,12 +16,25 @@ class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			content: ''
+			title: '',
+			summary: [[]],
+			contentHeader: [[]],
+			content: [[]]
 		}
 	}
 
 	componentDidMount() {
 		this.getCoverageFile('index.html')
+	}
+
+	renderTable(table) {
+		return table.map(line => {
+		   	return (
+				<tr>
+					{line.map(elt => <td class={elt.class}>{elt.text}</td>)}
+				</tr>
+		   	)
+		})
 	}
 
 	getCoverageFile(filePath) {
@@ -34,13 +47,38 @@ class Coverage extends React.Component {
 			},
 			body: JSON.stringify({file: CoverageDirectory+filePath})
 		})
-		.then(res => res.text())
-		.then(res => this.setState({content: res}))
+		.then(res => res.json())
+		.then(res => {
+			this.setState({
+				title: res.title,
+				summary: res.summary,
+				contentHeader: res.contentHeader,
+				content: res.content
+			})
+		})
+		.catch(err => console.log(err))
 	}
 	
 	render() {
 		return (
-			<div>{this.state.content}</div>
+			<div>
+				<div class='title'>{this.props.state.title}</div>
+				<table class='summary'>
+					<tbody>
+						{this.renderTable(this.props.state.summary)}
+					</tbody>
+				</table>
+				<table class='contentHeader'>
+					<tbody>
+						{this.renderTable(this.props.state.contentHeader)}
+					</tbody>
+				</table>
+				<table class='content'>
+					<tbody>
+						{this.renderTable(this.props.state.content)}
+					</tbody>
+				</table>
+         	</div>
 		)
 	}
 }
