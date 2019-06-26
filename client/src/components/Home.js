@@ -27,19 +27,23 @@ class Home extends React.Component {
 		})
 		.then(res => res.json())
 		.then(res => {
-			this.setState({
+			this.setState(prevState => ({
+				...prevState,
 				coverage: {
 					coverageDate: res.coverageDate,
 					lineCoverage: res.lineCoverage,
 					functionCoverage: res.functionCoverage
 				}
-			})
+			}))
 		})
 		.catch(err => console.log(err))
 	}
 	
 	gotoCoverage = () => {
-		this.setState({redirect: 'coverage'})
+		this.setState(prevState => ({
+			...prevState,
+			redirect: 'coverage'
+		}))
 	}
 	
 	render() {
