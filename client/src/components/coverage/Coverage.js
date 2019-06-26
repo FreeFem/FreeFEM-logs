@@ -16,22 +16,13 @@ class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			covFile: ''
+			content: ''
 		}
 	}
 
 	componentDidMount() {
 		this.getCoverageFile('index.html')
 	}
-
-	componentDidUpdate(prevProps) {
-        if (this.props.location.pathname !== prevProps.location.pathname) {
-			var url = this.props.location.pathname
-			var filePath = url.substring(url.indexOf('/') + 1)
-			//this.props.location.pathname.insert(url.indexOf('/'), 'coverage')
-			this.getCoverageFile(filePath)
-        }
-    }
 
 	getCoverageFile(filePath) {
 		fetch(API+'getCoverageFile', {
@@ -44,12 +35,12 @@ class Coverage extends React.Component {
 			body: JSON.stringify({file: CoverageDirectory+filePath})
 		})
 		.then(res => res.text())
-		.then(res => this.setState({covFile: res}))
+		.then(res => this.setState({content: res}))
 	}
 	
 	render() {
 		return (
-			<div dangerouslySetInnerHTML={{__html: this.state.covFile}}></div>
+			<div>{this.state.content}</div>
 		)
 	}
 }
