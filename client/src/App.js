@@ -26,7 +26,12 @@ class App extends React.Component {
   
   componentDidMount() {
     this.loadLogs()
+    // this.proccessLogs()
   }
+  
+  // componentWillUpdate() {
+  //   this.proccessLogs()
+  // }
   
   /*!
    * Load all logs
@@ -35,6 +40,10 @@ class App extends React.Component {
     LogsLoader(API, this)
   }
   
+  // proccessLogs = () => {
+  //   LogsProccessing(this)
+  // }
+  // 
   render() {
     return (
       <BrowserRouter>
