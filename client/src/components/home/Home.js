@@ -4,7 +4,7 @@ import './Home.css'
 import { Link, Redirect } from 'react-router-dom'
 
 import {
-	API,
+	API, LOGS_NAME, COVERAGE_NAME, TIMING_NAME,
 	LOGS_URL, COVERAGE_URL, TIMING_URL,
 	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
 	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
@@ -61,7 +61,7 @@ class Home extends React.Component {
 		return (
 			<div className="Home">
         <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
-          <h1>Logs report</h1>
+          <h1>{LOGS_NAME} report</h1>
 					<div className="home-legend">
 						<p>
 							Legend:
@@ -79,7 +79,7 @@ class Home extends React.Component {
 					</div>
         </div>
         <div className="home-coverage" onClick={() => this.goto(COVERAGE_URL)}>
-          <h1>Coverage report</h1>
+          <h1>{COVERAGE_NAME} report</h1>
 					<div className="home-grid">
 	          <div className="home-item">Last run:</div>
 						<div className="home-value">{this.state.coverage.coverageDate}</div>
@@ -90,7 +90,7 @@ class Home extends React.Component {
 					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>
-          <h1>Timing report</h1>
+          <h1>{TIMING_NAME} report</h1>
           <p>summary</p>
         </div>
       </div>
