@@ -15,19 +15,39 @@ export function LogsLoader (API, app) {
     const logs = response
     
     Object.keys(logs).forEach(job => {
-      if (logs[job].count === 0) {
-        logs[job].class = 'zero'
-        logs[job].style = {borderColor: LOGS_ZERO_COLOR}
-      } else if (logs[job].count < LOGS_MID_LIMIT) {
-        logs[job].class = 'low'
-        logs[job].style = {borderColor: LOGS_LOW_COLOR}
-      } else if (logs[job].count < LOGS_HI_LIMIT) {
-        logs[job].class = 'med'
-        logs[job].style = {borderColor: LOGS_MID_COLOR}
+      const currentJob = logs[job]
+      const count = currentJob.count
+      if (count === 0) {
+        currentJob.class = 'zero'
+        currentJob.style = {borderColor: LOGS_ZERO_COLOR}
+      } else if (count < LOGS_MID_LIMIT) {
+        currentJob.class = 'low'
+        currentJob.style = {borderColor: LOGS_LOW_COLOR}
+      } else if (count < LOGS_HI_LIMIT) {
+        currentJob.class = 'med'
+        currentJob.style = {borderColor: LOGS_MID_COLOR}
       } else {
-        logs[job].class = 'hi'
-        logs[job].style = {borderColor: LOGS_HI_COLOR}
+        currentJob.class = 'hi'
+        currentJob.style = {borderColor: LOGS_HI_COLOR}
       }
+      
+      Object.keys(currentJob.directories).forEach(directory => {
+        const currentDirectory = currentJob.directories[directory]
+        const count = currentDirectory.count
+        if (count === 0) {
+          currentDirectory.class = 'zero'
+          currentDirectory.style = {borderColor: LOGS_ZERO_COLOR}
+        } else if (count < LOGS_MID_LIMIT) {
+          currentDirectory.class = 'low'
+          currentDirectory.style = {borderColor: LOGS_LOW_COLOR}
+        } else if (count < LOGS_HI_LIMIT) {
+          currentDirectory.class = 'med'
+          currentDirectory.style = {borderColor: LOGS_MID_COLOR}
+        } else {
+          currentDirectory.class = 'hi'
+          currentDirectory.style = {borderColor: LOGS_HI_COLOR}
+        }
+      })
     })
     
     app.setState(prevState => ({

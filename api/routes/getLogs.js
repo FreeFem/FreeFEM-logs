@@ -46,9 +46,8 @@ router.get('/', function(req, res, next) {
       for (let k = 0; k < files.length; k++) {
         const file = files[k]
         const content = fs.readFileSync('../logs/'+job+'/'+directory+'/'+file)
-        
         // Append to global object
-        ojobs[job].directories[directory].files[file] = content
+        ojobs[job].directories[directory].files[file] = content.toString()
       }
     }
   }

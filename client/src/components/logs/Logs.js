@@ -1,206 +1,146 @@
 import React from 'react'
 import './Logs.css'
 
-import { API } from '../../config/Config'
+import { Link } from 'react-router-dom'
 
-export const LOW_LIMIT = 0
-export const MID_LIMIT = 10
-export const HIGH_LIMIT = 20
-export const COLOR_GREEN = 'green'
-export const COLOR_YELLOW = 'yellow'
-export const COLOR_ORANGE = 'orange'
-export const COLOR_RED = 'red'
+import { LOGS_URL, LOGS_NAME } from '../../config/Config'
+// 
+// export const LOW_LIMIT = 0
+// export const MID_LIMIT = 10
+// export const HIGH_LIMIT = 20
+// export const COLOR_GREEN = 'green'
+// export const COLOR_YELLOW = 'yellow'
+// export const COLOR_ORANGE = 'orange'
+// export const COLOR_RED = 'red'
 
 class Logs extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {
-			logs: '',
-			jobsList: '',
-			directoriesList: '',
-			filesList: '',
-			file: '',
-			content: ''
-		}
-	}
-
-	componentDidMount() {
-		this.getFullLogs()
-	}
-
-	getFullLogs() {
-		// Get jobs
-		fetch(API+'getLogJobs', {
-			method: 'GET',
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			}
-		}).then(response => response.json())
-		.then(response => {
-			if (response.status !== undefined && response.status === 'error')
-				return
-
-			const jobs = response
-
-			const logs = {}
-
-			// Get directories
-			jobs.forEach(job => {
-				fetch(API+'getLogDirectories', {
-					method: 'POST',
-					headers: {
-						'Access-Control-Allow-Origin': '*',
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({job: job})
-				}).then(response => response.json())
-				.then(response => {
-					const directories = response
-
-					logs[job] = {directories: [], color: COLOR_GREEN}
-
-					// Get files
-					directories.forEach(directory => {
-						fetch(API+'getLogFiles', {
-							method: 'POST',
-							headers: {
-								'Access-Control-Allow-Origin': '*',
-								'Accept': 'application/json',
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify({job: job, directory: directory})
-						}).then(response => response.json())
-						.then(response => {
-							const files = response
-
-							const logsJob = logs[job]
-							logsJob.directories[directory] = {files: files, color: COLOR_GREEN}
-
-							// Color directory
-							const nFiles = files.length
-							if (nFiles > HIGH_LIMIT)
-								logsJob.directories[directory].color = COLOR_RED
-							else if (nFiles > MID_LIMIT)
-								logsJob.directories[directory].color = COLOR_ORANGE
-							else if (nFiles > LOW_LIMIT)
-								logsJob.directories[directory].color = COLOR_YELLOW
-
-							// Color job
-							if ((logsJob.color === COLOR_ORANGE || logsJob.color === COLOR_YELLOW || logsJob.color === COLOR_GREEN) && nFiles > HIGH_LIMIT)
-								logsJob.color = COLOR_RED
-							if ((logsJob.color === COLOR_YELLOW || logsJob.color === COLOR_GREEN) && nFiles > MID_LIMIT)
-								logsJob.color = COLOR_ORANGE
-							else if (logsJob.color === COLOR_GREEN && nFiles > LOW_LIMIT)
-								logsJob.color = COLOR_YELLOW
-
-							this.setState({logs: logs})
-							this.setJobsList()
-						})
-					})
-					// End get files
-				})
-			})
-			// End get directories
-		})
-		// End get jobs
-	}
-
-	setJobsList() {
-		const jobs = Object.keys(this.state.logs)
-		jobs.sort()
-		const jobsList = jobs.map(job =>
-			<button
-				key={job}
-				onClick={() => this.setDirectoriesList(job)}
-				style={{borderColor: this.state.logs[job].color}}
-				>
-				{job}
-			</button>
-		)
-		this.setState({jobsList: jobsList, directoriesList: '', filesList: '', file: '', content: ''})
-	}
-
-	setDirectoriesList(job) {
-		const directories = this.state.logs[job].directories
-		const directoriesKeys = Object.keys(directories)
-
-		const directoriesList = directoriesKeys.map(directory =>
-			<button
-				key={directory}
-				onClick={() => this.setFilesList(job, directory)}
-				style={{borderColor: directories[directory].color}}
-				>
-				{directory}
-			</button>
-		)
-		this.setState({directoriesList: directoriesList, filesList: '', file: '', content: ''})
-	}
-
-	setFilesList(job, directory) {
-		const files = this.state.logs[job].directories[directory].files
-		const filesList = files.map(file =>
-			<button
-				key={file}
-				onClick={() => this.setContent(job, directory, file)}
-				>
-				{file}
-			</button>
-		)
-		this.setState({filesList: filesList, file: '', content: ''})
-	}
-
-	setContent(job, directory, file) {
-		fetch(API+'getLogContent', {
-				method: 'POST',
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({job: job, directory: directory, file: file})
-			}).then(response => response.json())
-			.then(response => {
-				const content = response
-				this.setState({file: file, content: content})
-			})
+		this.state = {}
 	}
 
   render() {
+		const currentURL = this.props.location.pathname
+		let path = currentURL.split('/')
+		path = path.filter(e => e !== '')
+		
+		let previous
+		let content
+		
+		if (path.length === 1) {
+			const jobs = this.props.logs
+			content = Object.keys(jobs).map(job =>
+				<Link to={LOGS_URL+'/'+job} key={job} className={jobs[job].class} style={jobs[job].style}>{job}</Link>
+			)
+		} else if (path.length === 2) {
+			const job = path[1]
+			if (!this.props.logs[job])
+				return (<div/>)
+			const directories = this.props.logs[job].directories
+			previous =
+				<div className="previous">
+					<Link to={LOGS_URL}>
+						&lt; {LOGS_NAME}
+					</Link>
+				</div>
+			content = Object.keys(directories).map(directory =>
+				<Link to={LOGS_URL+'/'+job+'/'+directory} key={directory} className={directories[directory].class} style={directories[directory].style}>{directory}</Link>
+			)
+		} else if (path.length === 3) {
+			const job = path[1]
+			if (!this.props.logs[job])
+				return (<div/>)
+			const directory = path[2]
+			if (!this.props.logs[job].directories[directory])
+				return (<div/>)
+			const files = this.props.logs[job].directories[directory].files
+			previous =
+				<div className="previous">
+					<Link to={LOGS_URL}>
+						&lt; {LOGS_NAME}
+					</Link>
+					<Link to={LOGS_URL+'/'+job}>
+						&lt; {job}
+					</Link>
+				</div>
+			content = Object.keys(files).map(file =>
+				<Link to={LOGS_URL+'/'+job+'/'+directory+'/'+file} key={file} className={files[file].class} style={files[file].style}>{file}</Link>
+			)
+		} else if (path.length === 4) {
+			const job = path[1]
+			if (!this.props.logs[job])
+				return (<div/>)
+			const directory = path[2]
+			if (!this.props.logs[job].directories[directory])
+				return (<div/>)
+			const file = path[3]
+			if (!this.props.logs[job].directories[directory].files[file])
+				return (<div/>)
+			const fileContent = this.props.logs[job].directories[directory].files[file]
+			previous =
+				<div className="previous">
+					<Link to={LOGS_URL}>
+						&lt; {LOGS_NAME}
+					</Link>
+					<Link to={LOGS_URL+'/'+job}>
+						&lt; {job}
+					</Link>
+					<Link to={LOGS_URL+'/'+job+'/'+directory}>
+						&lt; {directory}
+					</Link>
+				</div>
+			content =
+				<pre><code>{fileContent}</code></pre>
+		} else {
+			previous =
+				<div className="previous">
+					<Link to={LOGS_URL}>
+						&lt; {LOGS_NAME}
+					</Link>
+				</div>
+		}
+			
     return (
-		<section className="LogList">
-			<article className="Jobs">
-				<h2>Jobs</h2>
-				<div>
-					{this.state.jobsList}
-				</div>
-			</article>
-			<article className="Directories">
-				<h2>Directories</h2>
-				<div>
-					{this.state.directoriesList}
-				</div>
-			</article>
-			<article className="Files">
-				<h2>Files</h2>
-				<div>
-					{this.state.filesList}
-				</div>
-			</article>
-			<article className="Content">
-				<h2>Content</h2>
-				<div>
-					<b>Current file:</b> {this.state.file}
-					<pre>
-						<code>
-							{this.state.content}
-						</code>
-					</pre>
-				</div>
-			</article>
-		</section>
-	)
+			<div className="Logs">
+				{previous}
+				{content}
+			</div>
+		)
   }
 }
 
 export default Logs;
+
+
+
+// <section className="LogList">
+// 	<article className="Jobs">
+// 		<h2>Jobs</h2>
+// 		<div>
+// 			{this.state.jobsList}
+// 		</div>
+// 	</article>
+// 	<article className="Directories">
+// 		<h2>Directories</h2>
+// 		<div>
+// 			{this.state.directoriesList}
+// 		</div>
+// 	</article>
+// 	<article className="Files">
+// 		<h2>Files</h2>
+// 		<div>
+// 			{this.state.filesList}
+// 		</div>
+// 	</article>
+// 	<article className="Content">
+// 		<h2>Content</h2>
+// 		<div>
+// 			<b>Current file:</b> {this.state.file}
+// 			<pre>
+// 				<code>
+// 					{this.state.content}
+// 				</code>
+// 			</pre>
+// 		</div>
+// 	</article>
+// </section>
