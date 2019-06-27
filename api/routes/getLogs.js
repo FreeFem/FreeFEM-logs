@@ -33,6 +33,7 @@ router.get('/', function(req, res, next) {
       const directory = directories[j]
       const files = fs.readdirSync('../logs/'+job+'/'+directory)
       
+      ojobs[job].count += files.length
       ojobs[job].directories[directory].count = files.length
       
       // Append to global object
@@ -41,7 +42,7 @@ router.get('/', function(req, res, next) {
         ofiles[key] = {error: '', content: ''}
       ojobs[job].directories[directory].files = ofiles
       
-      // ojobs[job].directories[directory]
+      // Get content of each file
       for (let k = 0; k < files.length; k++) {
         const file = files[k]
         const content = fs.readFileSync('../logs/'+job+'/'+directory+'/'+file)
@@ -52,7 +53,7 @@ router.get('/', function(req, res, next) {
     }
   }
   
-	res.send(JSON.stringify(jobs));
+	res.send(ojobs);
 });
 
 module.exports = router;

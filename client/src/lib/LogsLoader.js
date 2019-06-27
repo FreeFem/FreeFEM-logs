@@ -6,7 +6,18 @@ export function LogsLoader (API, app) {
 		}
   })
   .then(response => response.json())
-  .then(response => console.log(response))
+  .then(response => {
+    app.setState(prevState => ({
+      ...prevState,
+      logs: response
+    }))
+  })
+  .catch(err => {
+    app.setState(prevState => ({
+      ...prevState,
+      error: 'Unable to load logs'
+    }))
+  })
 }
 
 // export function LogsLoader (API, app) {
