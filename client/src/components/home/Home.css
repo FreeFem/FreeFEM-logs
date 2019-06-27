@@ -27,14 +27,26 @@
   background-color: rgba(200, 200, 200, 0.5);
 }
 
-.Home ul {
-  list-style: none;
+.Home .home-legend {
+  
 }
 
-.Home li {
-  padding: .25rem;
+.Home .home-legend span {
+  margin: 0.1rem;
+  padding: 0.1rem;
+  border: 2px solid;
 }
 
-.Home li::before {
-  content: "- ";
+.home-logs a {
+  display: block;
+  color: black;
+  text-decoration: none;
+  padding: 0.58rem;
+  margin: 0.25rem;
+  border: 2px solid;
+}
+
+.home-logs .home-value {
+  display: flex;
+  flex-wrap: wrap;
 }

@@ -1,9 +1,13 @@
 import React from 'react'
 import './Home.css'
 
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
-import { LOGS_URL, COVERAGE_URL, TIMING_URL } from '../../config/Config'
+import {
+	LOGS_URL, COVERAGE_URL, TIMING_URL,
+	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
+	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
+} from '../../config/Config'
 
 class Home extends React.Component {
 	constructor(props) {
@@ -18,10 +22,6 @@ class Home extends React.Component {
 		}
 	}
 	
-	componentDidMount() {
-		
-	}
-	
 	goto = (url) => {
 		this.setState(prevState => ({
 			...prevState,
@@ -34,19 +34,26 @@ class Home extends React.Component {
 			return <Redirect push to={this.state.redirect} />
 		
 		const jobsList = Object.keys(this.props.logs).map(job =>
-			<li key={job}>{job}</li>
+			<Link to={LOGS_URL+'/'+job} key={job} className={this.props.logs[job].class} style={this.props.logs[job].style}>{job}</Link>
 		)
 		return (
 			<div className="Home">
         <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
           <h1>Logs report</h1>
+					<div className="home-legend">
+						<p>
+							Legend:
+							<span style={{borderColor: LOGS_ZERO_COLOR}}>Zero fail</span>
+							<span style={{borderColor: LOGS_LOW_COLOR}}>&lt; {LOGS_MID_LIMIT} fails</span>
+							<span style={{borderColor: LOGS_MID_COLOR}}>&lt; {LOGS_HI_LIMIT} fails</span>
+							<span style={{borderColor: LOGS_HI_COLOR}}>&gt; {LOGS_HI_LIMIT} fails</span>
+						</p>
+					</div>
           <div className="home-item">
 						Jobs:
 					</div>
 					<div className="home-value">
-						<ul>
-							{jobsList}
-						</ul>
+						{jobsList}
 					</div>
         </div>
         <div className="home-coverage" onClick={() => this.goto(COVERAGE_URL)}>

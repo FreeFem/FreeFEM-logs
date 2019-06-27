@@ -1,3 +1,8 @@
+import {
+	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
+	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
+} from '../config/Config'
+
 export function LogsLoader (API, app) {
   fetch(API+'getLogs', {
     method: 'GET',
@@ -7,6 +12,24 @@ export function LogsLoader (API, app) {
   })
   .then(response => response.json())
   .then(response => {
+    const logs = response
+    
+    Object.keys(logs).forEach(job => {
+      if (logs[job].count === 0) {
+        logs[job].class = 'zero'
+        logs[job].style = {borderColor: LOGS_ZERO_COLOR}
+      } else if (logs[job].count < LOGS_MID_LIMIT) {
+        logs[job].class = 'low'
+        logs[job].style = {borderColor: LOGS_LOW_COLOR}
+      } else if (logs[job].count < LOGS_HI_LIMIT) {
+        logs[job].class = 'med'
+        logs[job].style = {borderColor: LOGS_MID_COLOR}
+      } else {
+        logs[job].class = 'hi'
+        logs[job].style = {borderColor: LOGS_HI_COLOR}
+      }
+    })
+    
     app.setState(prevState => ({
       ...prevState,
       logs: response
