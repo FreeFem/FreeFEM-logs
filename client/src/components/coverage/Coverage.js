@@ -19,7 +19,7 @@ class Coverage extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getCoverageFile('index.html')
+		this.getCoverageInfo()
 	}
 
 	renderTable(table) {
@@ -33,25 +33,16 @@ class Coverage extends React.Component {
 		})
 	}
 
-	getCoverageFile(filePath) {
-		fetch(API+'getCoverageFile', {
-			method: 'POST',
+	getCoverageInfo() {
+		fetch(API+'getCoverageInfo', {
+			method: 'GET',
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({file: CoverageDirectory+filePath})
+			}
 		})
 		.then(res => res.json())
-		.then(res => {
-			this.setState({
-				title: res.title,
-				summary: res.summary,
-				contentHeader: res.contentHeader,
-				content: res.content
-			})
-		})
 		.catch(err => console.log(err))
 	}
 	
