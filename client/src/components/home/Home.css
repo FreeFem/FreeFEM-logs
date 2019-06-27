@@ -26,3 +26,15 @@
 .Home > div:hover {
   background-color: rgba(200, 200, 200, 0.5);
 }
+
+.Home ul {
+  list-style: none;
+}
+
+.Home li {
+  padding: .25rem;
+}
+
+.Home li::before {
+  content: "- ";
+}

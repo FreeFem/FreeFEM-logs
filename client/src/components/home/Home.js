@@ -3,14 +3,13 @@ import './Home.css'
 
 import { Redirect } from 'react-router-dom'
 
-import { API, LOGS_URL, COVERAGE_URL, TIMING_URL } from '../../config/Config'
+import { LOGS_URL, COVERAGE_URL, TIMING_URL } from '../../config/Config'
 
 class Home extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			redirect: '',
-			jobs: '',
 			coverage: {
 				coverageDate: '',
 				lineCoverage: '',
@@ -20,38 +19,7 @@ class Home extends React.Component {
 	}
 	
 	componentDidMount() {
-		fetch(API+'getCoverageSummary', {
-			method: 'GET',
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			}
-		})
-		.then(res => res.json())
-		.then(res => {
-			this.setState(prevState => ({
-				...prevState,
-				coverage: {
-					coverageDate: res.coverageDate,
-					lineCoverage: res.lineCoverage,
-					functionCoverage: res.functionCoverage
-				}
-			}))
-		})
-		.catch(err => console.log(err))
 		
-		fetch(API+'getLogJobs', {
-			method: 'GET',
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			}
-		})
-		.then(res => res.json())
-		.then(res => {
-			this.setState(prevState => ({
-				...prevState,
-				jobs: res
-			}))
-		})
 	}
 	
 	goto = (url) => {
@@ -65,7 +33,7 @@ class Home extends React.Component {
 		if (this.state.redirect)
 			return <Redirect push to={this.state.redirect} />
 		
-		const jobsList = Object.values(this.state.jobs).map(job =>
+		const jobsList = Object.keys(this.props.logs).map(job =>
 			<li key={job}>{job}</li>
 		)
 		return (
