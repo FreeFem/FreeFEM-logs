@@ -39,24 +39,19 @@ class Home extends React.Component {
 		})
 		.catch(err => console.log(err))
 		
-		// fetch(API+'getLogJobs', {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Access-Control-Allow-Origin': '*'
-		// 	}
-		// })
-		// .then(res => res.json())
-		// .then(res => {
-			// const jobs = new Array()
-			// console.log(typeof jobs)
-			// for (let i = 0; i < res.length; i++)
-			// 	jobs[i] = res[i]
-			// console.log(typeof jobs)
-			// this.setState(prevState => ({
-			// 	...prevState,
-			// 	jobs: res
-			// }))
-		// })
+		fetch(API+'getLogJobs', {
+			method: 'GET',
+			headers: {
+				'Access-Control-Allow-Origin': '*'
+			}
+		})
+		.then(res => res.json())
+		.then(res => {
+			this.setState(prevState => ({
+				...prevState,
+				jobs: res
+			}))
+		})
 	}
 	
 	goto = (url) => {
@@ -70,10 +65,9 @@ class Home extends React.Component {
 		if (this.state.redirect)
 			return <Redirect push to={this.state.redirect} />
 		
-		// const jobs = this.state.jobs
-		// const jobsList = jobs.map(job =>
-		// 	<li key={job}>{job}</li>
-		// )
+		const jobsList = Object.values(this.state.jobs).map(job =>
+			<li key={job}>{job}</li>
+		)
 		return (
 			<div className="Home">
         <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
@@ -83,6 +77,7 @@ class Home extends React.Component {
 					</div>
 					<div className="home-value">
 						<ul>
+							{jobsList}
 						</ul>
 					</div>
         </div>
