@@ -4,6 +4,7 @@ import './Home.css'
 import { Link, Redirect } from 'react-router-dom'
 
 import {
+	API,
 	LOGS_URL, COVERAGE_URL, TIMING_URL,
 	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
 	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
@@ -20,6 +21,27 @@ class Home extends React.Component {
 				functionCoverage: ''
 			}
 		}
+	}
+	
+	componentDidMount() {
+		fetch(API+'getCoverageSummary', {
+			method: 'GET',
+			headers: {
+				'Access-Control-Allow-Origin': '*'
+			}
+		})
+		.then(res => res.json())
+		.then(res => {
+			this.setState(prevState => ({
+				...prevState,
+				coverage: {
+					coverageDate: res.coverageDate,
+					lineCoverage: res.lineCoverage,
+					functionCoverage: res.functionCoverage
+				}
+			}))
+		})
+		.catch(err => console.log(err))
 	}
 	
 	goto = (url) => {
