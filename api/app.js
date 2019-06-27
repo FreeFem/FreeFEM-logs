@@ -7,10 +7,6 @@ var cors = require("cors");
 
 var indexRouter = require('./routes/index');
 var getLogs = require('./routes/getLogs');
-var getLogJobs = require('./routes/getLogJobs');
-var getLogDirectories = require('./routes/getLogDirectories');
-var getLogFiles = require('./routes/getLogFiles');
-var getLogContent = require('./routes/getLogContent');
 var getCoverageInfo = require('./routes/getCoverageInfo');
 var getCoverageSummary = require('./routes/getCoverageSummary');
 
@@ -25,10 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/getLogs', getLogs);
-app.use('/getLogJobs', getLogJobs);
-app.use('/getLogDirectories', getLogDirectories);
-app.use('/getLogFiles', getLogFiles);
-app.use('/getLogContent', getLogContent);
 app.use('/getCoverageInfo', getCoverageInfo);
 app.use('/getCoverageSummary', getCoverageSummary);
 
