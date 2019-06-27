@@ -65,10 +65,10 @@ class Home extends React.Component {
 					<div className="home-legend">
 						<p>
 							Legend:
-							<span style={{borderColor: LOGS_ZERO_COLOR}}>Zero fail</span>
-							<span style={{borderColor: LOGS_LOW_COLOR}}>&lt; {LOGS_MID_LIMIT} fails</span>
-							<span style={{borderColor: LOGS_MID_COLOR}}>&lt; {LOGS_HI_LIMIT} fails</span>
-							<span style={{borderColor: LOGS_HI_COLOR}}>&gt; {LOGS_HI_LIMIT} fails</span>
+							<span style={{borderColor: LOGS_ZERO_COLOR}}>0 fail</span>
+							<span style={{borderColor: LOGS_LOW_COLOR}}>&lt; {LOGS_MID_LIMIT} fail</span>
+							<span style={{borderColor: LOGS_MID_COLOR}}>&lt; {LOGS_HI_LIMIT} fail</span>
+							<span style={{borderColor: LOGS_HI_COLOR}}>&gt; {LOGS_HI_LIMIT} fail</span>
 						</p>
 					</div>
           <div className="home-item">
