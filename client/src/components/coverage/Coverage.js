@@ -10,11 +10,7 @@ class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			title: 'bs',
-			test: [[1, 2, 3], [4, 5, 6]],
-			summary: [[]],
-			contentHeader: [[]],
-			content: [[]]
+			coverageInfo: ''
 		}
 	}
 
@@ -42,19 +38,15 @@ class Coverage extends React.Component {
 				'Content-Type': 'application/json'
 			}
 		})
-		.then(res => res.json())
+		.then(res => res.text())
+		.then(res => this.setState({coverageInfo: res}))
 		.catch(err => console.log(err))
 	}
 	
 	render() {
 		return (
 			<div>
-				<div class='title'>{this.state.title}</div>
-				<table class='summary'>
-					<tbody>
-						{this.renderTable(this.state.test)}
-					</tbody>
-				</table>
+				{this.state.coverageInfo}
          	</div>
 		)
 	}
