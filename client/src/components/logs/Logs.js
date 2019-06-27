@@ -4,14 +4,6 @@ import './Logs.css'
 import { Link } from 'react-router-dom'
 
 import { LOGS_URL, LOGS_NAME } from '../../config/Config'
-// 
-// export const LOW_LIMIT = 0
-// export const MID_LIMIT = 10
-// export const HIGH_LIMIT = 20
-// export const COLOR_GREEN = 'green'
-// export const COLOR_YELLOW = 'yellow'
-// export const COLOR_ORANGE = 'orange'
-// export const COLOR_RED = 'red'
 
 class Logs extends React.Component {
 	constructor(props) {
@@ -25,10 +17,15 @@ class Logs extends React.Component {
 		path = path.filter(e => e !== '')
 		
 		let previous
+		let title
 		let content
 		
 		if (path.length === 1) {
 			const jobs = this.props.logs
+			title =
+				<div>
+					<p>Job list</p>
+				</div>
 			content = Object.keys(jobs).map(job =>
 				<Link to={LOGS_URL+'/'+job} key={job} className={jobs[job].class} style={jobs[job].style}>{job}</Link>
 			)
@@ -42,6 +39,10 @@ class Logs extends React.Component {
 					<Link to={LOGS_URL}>
 						&lt; {LOGS_NAME}
 					</Link>
+				</div>
+			title =
+				<div>
+					<p>{job}</p>
 				</div>
 			content = Object.keys(directories).map(directory =>
 				<Link to={LOGS_URL+'/'+job+'/'+directory} key={directory} className={directories[directory].class} style={directories[directory].style}>{directory}</Link>
@@ -62,6 +63,10 @@ class Logs extends React.Component {
 					<Link to={LOGS_URL+'/'+job}>
 						&lt; {job}
 					</Link>
+				</div>
+			title =
+				<div>
+					<p>{job} - {directory}</p>
 				</div>
 			content = Object.keys(files).map(file =>
 				<Link to={LOGS_URL+'/'+job+'/'+directory+'/'+file} key={file} className={files[file].class} style={files[file].style}>{file}</Link>
@@ -89,6 +94,10 @@ class Logs extends React.Component {
 						&lt; {directory}
 					</Link>
 				</div>
+			title =
+				<div>
+					<p>{job} - {directory} - {file}</p>
+				</div>
 			content =
 				<pre><code>{fileContent}</code></pre>
 		} else {
@@ -103,6 +112,7 @@ class Logs extends React.Component {
     return (
 			<div className="Logs">
 				{previous}
+				{title}
 				{content}
 			</div>
 		)
@@ -110,37 +120,3 @@ class Logs extends React.Component {
 }
 
 export default Logs;
-
-
-
-// <section className="LogList">
-// 	<article className="Jobs">
-// 		<h2>Jobs</h2>
-// 		<div>
-// 			{this.state.jobsList}
-// 		</div>
-// 	</article>
-// 	<article className="Directories">
-// 		<h2>Directories</h2>
-// 		<div>
-// 			{this.state.directoriesList}
-// 		</div>
-// 	</article>
-// 	<article className="Files">
-// 		<h2>Files</h2>
-// 		<div>
-// 			{this.state.filesList}
-// 		</div>
-// 	</article>
-// 	<article className="Content">
-// 		<h2>Content</h2>
-// 		<div>
-// 			<b>Current file:</b> {this.state.file}
-// 			<pre>
-// 				<code>
-// 					{this.state.content}
-// 				</code>
-// 			</pre>
-// 		</div>
-// 	</article>
-// </section>
