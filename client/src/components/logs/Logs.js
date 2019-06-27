@@ -27,7 +27,7 @@ class Logs extends React.Component {
 					<p>Job list</p>
 				</div>
 			content = Object.keys(jobs).map(job =>
-				<Link to={LOGS_URL+'/'+job} key={job} className={jobs[job].class} style={jobs[job].style}>{job}</Link>
+				<Link to={LOGS_URL+'/'+job} key={job} className={jobs[job].class} style={jobs[job].style}><p>{job}</p><p>Failed: {jobs[job].count}</p></Link>
 			)
 		} else if (path.length === 2) {
 			const job = path[1]
@@ -45,7 +45,7 @@ class Logs extends React.Component {
 					<p>{job}</p>
 				</div>
 			content = Object.keys(directories).map(directory =>
-				<Link to={LOGS_URL+'/'+job+'/'+directory} key={directory} className={directories[directory].class} style={directories[directory].style}>{directory}</Link>
+				<Link to={LOGS_URL+'/'+job+'/'+directory} key={directory} className={directories[directory].class} style={directories[directory].style}><p>{directory}</p><p>Failed: {directories[directory].count}</p></Link>
 			)
 		} else if (path.length === 3) {
 			const job = path[1]
@@ -69,7 +69,7 @@ class Logs extends React.Component {
 					<p>{job} - {directory}</p>
 				</div>
 			content = Object.keys(files).map(file =>
-				<Link to={LOGS_URL+'/'+job+'/'+directory+'/'+file} key={file} className={files[file].class} style={files[file].style}>{file}</Link>
+				<Link to={LOGS_URL+'/'+job+'/'+directory+'/'+file} key={file} className={files[file].class} style={files[file].style}><p>{file}</p></Link>
 			)
 		} else if (path.length === 4) {
 			const job = path[1]
