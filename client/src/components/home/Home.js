@@ -3,8 +3,10 @@ import './Home.css'
 
 import { Link, Redirect } from 'react-router-dom'
 
+import MyLink from '../base/Link'
+
 import {
-	API, LOGS_NAME, COVERAGE_NAME, TIMING_NAME,
+	LOGS_NAME, COVERAGE_NAME, TIMING_NAME,
 	LOGS_URL, COVERAGE_URL, TIMING_URL,
 	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
 	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
@@ -32,8 +34,6 @@ class Home extends React.Component {
 		const jobsList = Object.keys(this.props.logs).map(job =>
 			<Link to={LOGS_URL+'/'+job} key={job} className={this.props.logs[job].class} style={this.props.logs[job].style}>{job}</Link>
 		)
-		
-		console.log(this.props.coverage)
 		
 		return (
 			<div className="Home">
@@ -70,6 +70,12 @@ class Home extends React.Component {
           <h1>{TIMING_NAME} report</h1>
           <p>summary</p>
         </div>
+				<div className="home-github">
+					<h1>Need more features ?</h1>
+					<p>
+						Ask in <MyLink href="https://github.com/FreeFem/FreeFEM-logs/issues" text="GitHub issues" />
+					</p>
+				</div>
       </div>
 		)
 	}
