@@ -3,6 +3,7 @@ import './Home.css'
 
 import { Link, Redirect } from 'react-router-dom'
 
+import Loading from '../base/Loading'
 import MyLink from '../base/Link'
 
 import {
@@ -51,14 +52,14 @@ class Home extends React.Component {
           <div className="home-item">
 						Jobs:
 					</div>
-					<div className="isLoading"><div className={this.props.status.logs} /></div>
+					<Loading status={this.props.status.logs} />
 					<div className="home-value">
 						{jobsList}
 					</div>
         </div>
         <div className="home-coverage" onClick={() => this.goto(COVERAGE_URL)}>
           <h1>{COVERAGE_NAME} report</h1>
-					<div className="isLoading"><div className={this.props.status.coverage} /></div>
+					<Loading status={this.props.status.coverage} />
 					<div className="home-grid">
 	          <div className="home-item">Last run:</div>
 						<div className="home-value">{this.props.coverage.coverageDate}</div>
@@ -70,7 +71,7 @@ class Home extends React.Component {
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>
           <h1>{TIMING_NAME} report</h1>
-          <div className="isLoading"><div className={this.props.status.timing} /></div>
+          <Loading status={this.props.status.timing} />
         </div>
 				<div className="home-github">
 					<h1>Need more features ?</h1>

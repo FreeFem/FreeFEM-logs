@@ -58,8 +58,8 @@ class App extends React.Component {
         <Nav />
         <div id="content">
           <Route exact path={HOME_URL} render={(props) => <Home {...props} status={this.state.status} logs={this.state.logs} coverage={this.state.coverage} />} />
-          <Route path={LOGS_URL} render={(props) => <Logs {...props} logs={this.state.logs} />} />
-          <Route path={COVERAGE_URL} render={(props) => <Coverage {...props} coverage={this.state.coverage} />} />
+          <Route path={LOGS_URL} render={(props) => <Logs {...props} status={this.state.status.logs} logs={this.state.logs} />} />
+          <Route path={COVERAGE_URL} render={(props) => <Coverage {...props} status={this.state.status.coverage} coverage={this.state.coverage} />} />
           <Route path={TIMING_URL} component={Timing} />
         </div>
         <Footer />

@@ -3,6 +3,8 @@ import './Logs.css'
 
 import { Link } from 'react-router-dom'
 
+import Loading from '../base/Loading'
+
 import { LOGS_URL, LOGS_NAME } from '../../config/Config'
 
 class Logs extends React.Component {
@@ -113,6 +115,7 @@ class Logs extends React.Component {
 			<div className="Logs">
 				{previous}
 				{title}
+				<Loading status={this.props.status} />
 				{content}
 			</div>
 		)

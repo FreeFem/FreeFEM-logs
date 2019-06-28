@@ -1,6 +1,8 @@
 import React from 'react'
 import './Coverage.css'
 
+import Loading from '../base/Loading'
+
 class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
@@ -52,7 +54,7 @@ class Coverage extends React.Component {
 	render() {
 		return (
 			<div className="Coverage">
-
+				<Loading status={this.props.status} />
 				<div className="coverage-summary">
 					<div className="table-info">
 						<div className="header">Current view:</div>
