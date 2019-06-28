@@ -61,9 +61,9 @@ class Home extends React.Component {
 	          <div className="home-item">Last run:</div>
 						<div className="home-value">{this.props.coverage.coverageDate}</div>
 						<div className="home-item">Lines covered:</div>
-						<div className="home-value{this.state.lineCoverageStyle}">{this.props.coverage.globalLinesCovered}% ({this.props.coverage.globalNbLinesCov} / {this.props.coverage.globalNbLines})</div>
+						<div className="home-value{this.state.lineCoverageStyle}">{this.props.coverage.globalLinesCovered}% ({this.props.coverage.globalNbLinesHit} / {this.props.coverage.globalNbLines})</div>
 						<div className="home-item">Functions covered:</div>
-						<div className="home-value">{this.props.coverage.globalFunctionsCovered}% ({this.props.coverage.globalNbFuncCov} / {this.props.coverage.globalNbFunc})</div>
+						<div className="home-value">{this.props.coverage.globalFunctionsCovered}% ({this.props.coverage.globalNbFuncHit} / {this.props.coverage.globalNbFunc})</div>
 					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>

@@ -5,12 +5,12 @@ var router = express.Router();
 var parse = require('lcov-parse');
 
 String.prototype.nthIndexOf = function(pattern, n) {
-    var i = -1;
-    while (n-- && i++ < this.length) {
-        i = this.indexOf(pattern, i);
-        if (i < 0) break;
-    }
-    return i;
+	var i = -1;
+	while (n-- && i++ < this.length) {
+		i = this.indexOf(pattern, i);
+		if (i < 0) break;
+	}
+	return i;
 }
 
 function getDirectory(path) {
@@ -33,10 +33,10 @@ router.get('/', function(req, res, next) {
 
 		var covInfo = {
 			globalNbLines: 0,
-			globalNbLinesCov: 0,
+			globalNbLinesHit: 0,
 			globalLinesCovered: 0,
 			globalNbFunc: 0,
-			globalNbFuncCov: 0,
+			globalNbFuncHit: 0,
 			globalFunctionsCovered: 0,
 			directories: {}
 		}
@@ -50,10 +50,10 @@ router.get('/', function(req, res, next) {
 		data.map(fileInfo => {
 			covInfo.directories[getDirectory(fileInfo.file)][getFileName(fileInfo.file)] = {
 				nbLines: 0,
-				nbLinesCov: 0,
+				nbLinesHit: 0,
 				linesCovered: 0,
 				nbFunc: 0,
-				nbFuncCov: 0,
+				nbFuncHit: 0,
 				functionsCovered: 0,
 			}
 		})
@@ -61,19 +61,19 @@ router.get('/', function(req, res, next) {
 		// Retrieve info
 		data.map(fileInfo => {
 			covInfo.globalNbLines += fileInfo.lines.found
-			covInfo.globalNbLinesCov += fileInfo.lines.hit
+			covInfo.globalNbLinesHit += fileInfo.lines.hit
 			covInfo.globalNbFunc += fileInfo.functions.found
-			covInfo.globalNbFuncCov += fileInfo.functions.hit
+			covInfo.globalNbFuncHit += fileInfo.functions.hit
 			file = covInfo.directories[getDirectory(fileInfo.file)][getFileName(fileInfo.file)]
 			file.nbLines += fileInfo.lines.found
-			file.nbLinesCov += fileInfo.lines.hit
+			file.nbLinesHit += fileInfo.lines.hit
 			file.nbFunc += fileInfo.functions.found
-			file.nbFuncCov += fileInfo.functions.hit
+			file.nbFuncHit += fileInfo.functions.hit
 		})
 
 		// Compute coverage percentage
-		covInfo.globalLinesCovered = covInfo.globalNbLinesCov/covInfo.globalNbLines * 100
-		covInfo.globalFunctionsCovered = covInfo.globalNbFuncCov/covInfo.globalNbFunc * 100
+		covInfo.globalLinesCovered = covInfo.globalNbLinesHit/covInfo.globalNbLines * 100
+		covInfo.globalFunctionsCovered = covInfo.globalNbFuncHit/covInfo.globalNbFunc * 100
 
 		res.send(covInfo)
 	})
