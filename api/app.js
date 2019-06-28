@@ -8,7 +8,6 @@ var cors = require("cors");
 var indexRouter = require('./routes/index');
 var getLogs = require('./routes/getLogs');
 var getCoverageInfo = require('./routes/getCoverageInfo');
-var getCoverageSummary = require('./routes/getCoverageSummary');
 
 var app = express();
 
@@ -22,7 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/getLogs', getLogs);
 app.use('/getCoverageInfo', getCoverageInfo);
-app.use('/getCoverageSummary', getCoverageSummary);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
