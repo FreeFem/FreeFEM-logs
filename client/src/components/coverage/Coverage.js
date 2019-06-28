@@ -1,10 +1,6 @@
 import React from 'react'
 import './Coverage.css'
 
-export const API = process.env.REACT_APP_API || 'http://localhost:9000/'
-
-const CoverageDirectory = '../coverage/'
-
 class Coverage extends React.Component {
 
 	constructor(props) {
@@ -15,7 +11,7 @@ class Coverage extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getCoverageInfo()
+		//this.getCoverageInfo()
 	}
 
 	renderTable(table) {
@@ -30,17 +26,6 @@ class Coverage extends React.Component {
 	}
 
 	getCoverageInfo() {
-		// fetch(API+'getCoverageInfo', {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Access-Control-Allow-Origin': '*',
-		// 		'Accept': 'application/json',
-		// 		'Content-Type': 'application/json'
-		// 	}
-		// })
-		// .then(res => res.text())
-		// .then(res => this.setState({coverageInfo: res}))
-		// .catch(err => console.log(err))
 		// Use in App.js
 		// memory leaks
 		// setState when component is unmount (App.js is always mounted)

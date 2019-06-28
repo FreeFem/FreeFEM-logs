@@ -27,20 +27,17 @@ function getFileName(path) {
 
 /* Get coverage info */
 router.get('/', function(req, res, next) {
-	
+
 	parse('../coverage/report.info', function(err, data) {
-		if (err) throw err;
+		if (err) throw err
 
 		var covInfo = {
-
 			globalNbLines: 0,
 			globalNbLinesCov: 0,
 			globalLinesCovered: 0,
-
 			globalNbFunc: 0,
 			globalNbFuncCov: 0,
 			globalFunctionsCovered: 0,
-			
 			directories: {}
 		}
 
@@ -61,13 +58,12 @@ router.get('/', function(req, res, next) {
 			}
 		})
 
+		// Retrieve info
 		data.map(fileInfo => {
-
 			covInfo.globalNbLines += fileInfo.lines.found
 			covInfo.globalNbLinesCov += fileInfo.lines.hit
 			covInfo.globalNbFunc += fileInfo.functions.found
 			covInfo.globalNbFuncCov += fileInfo.functions.hit
-			
 			file = covInfo.directories[getDirectory(fileInfo.file)][getFileName(fileInfo.file)]
 			file.nbLines += fileInfo.lines.found
 			file.nbLinesCov += fileInfo.lines.hit
@@ -75,13 +71,12 @@ router.get('/', function(req, res, next) {
 			file.nbFuncCov += fileInfo.functions.hit
 		})
 
+		// Compute coverage percentage
 		covInfo.globalLinesCovered = covInfo.globalNbLinesCov/covInfo.globalNbLines * 100
 		covInfo.globalFunctionsCovered = covInfo.globalNbFuncCov/covInfo.globalNbFunc * 100
 
-		console.log(covInfo)
-
 		res.send(covInfo)
-	});
+	})
 });
 
 module.exports = router;
