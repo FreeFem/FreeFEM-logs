@@ -4,6 +4,13 @@ import {
 } from '../config/Config'
 
 export function LogsLoader (API, app) {
+	app.setState(prevState => ({
+		...prevState,
+		status: {
+			...prevState.status,
+			logs: 'loading'
+		}
+	}))
   fetch(API+'getLogs', {
     method: 'GET',
 		headers: {
@@ -58,6 +65,10 @@ export function LogsLoader (API, app) {
     
     app.setState(prevState => ({
       ...prevState,
+			status: {
+				...prevState.status,
+				logs: ''
+			},
       logs: response
     }))
   })

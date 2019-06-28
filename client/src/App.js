@@ -21,8 +21,14 @@ class App extends React.Component {
     super(props)
     this.state = {
       error: '',
+      status: {
+        logs: '',
+        coverage: '',
+        timing: ''
+      },
       logs: {},
-      coverage: {}
+      coverage: {},
+      timing: {}
     }
   }
   
@@ -51,7 +57,7 @@ class App extends React.Component {
         <Header />
         <Nav />
         <div id="content">
-          <Route exact path={HOME_URL} render={(props) => <Home {...props} logs={this.state.logs} coverage={this.state.coverage} />} />
+          <Route exact path={HOME_URL} render={(props) => <Home {...props} status={this.state.status} logs={this.state.logs} coverage={this.state.coverage} />} />
           <Route path={LOGS_URL} render={(props) => <Logs {...props} logs={this.state.logs} />} />
           <Route path={COVERAGE_URL} render={(props) => <Coverage {...props} coverage={this.state.coverage} />} />
           <Route path={TIMING_URL} component={Timing} />
