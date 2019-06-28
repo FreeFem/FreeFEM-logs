@@ -102,6 +102,38 @@ footer {
   box-shadow: 0px -10px 10px -10px #555;
 }
 
+.api-check {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.api-check p {
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+  color: white;
+  font-weight: 600;
+}
+
+.api-check .success p {
+  background-color: rgba(0, 255, 0, 0.75);
+  border: 1px solid rgba(0, 255, 0, 1);
+}
+
+.api-check .failure p {
+  background-color: rgba(255, 0, 0, 0.75);
+  border: 1px solid rgba(255, 0, 0, 1);
+}
+
+.api-check.hide {
+  max-height: 0;
+}
+
 @media screen and (max-width: 700px) {
   html {
     height: auto;
@@ -112,5 +144,9 @@ footer {
     position: relative;
     top: unset;
     right: unset;
+  }
+  
+  .api-check {
+    justify-content: flex-end;
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import './APICheck.css'
 
 import { API } from '../config/Config'
 
@@ -10,13 +9,18 @@ class Footer extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			status: '',
-			text: ''
+			status: [],
+			text: []
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.checkAPI()
+	}
+	
+	componentDidUpdate(prevProps) {
+		if (this.props.errorMessage !== prevProps.errorMessage)
+			this.showError()
 	}
 
 	checkAPI() {
@@ -30,7 +34,6 @@ class Footer extends React.Component {
 		.then(res => {
 			if (res.api === 'ok') {
 				this.APISuccess()
-				setTimeout(() => this.setState({status: 'api-check hide'}), 3000)
 			} else {
 				this.APIError()
 			}
@@ -40,26 +43,51 @@ class Footer extends React.Component {
 		})
 	}
 	
-	APISuccess = () => {
-		this.setState({
-			status: 'api-check success',
-			text: successText
-		})
+	showError = () => {
+		this.APIError(this.props.errorMessage)
 	}
 	
-	APIError = () => {
-		this.setState({
-			status: 'api-check failure',
-			text: failureText
-		})
+	APISuccess = () => {
+		this.setState(prevState => ({
+			status: [...prevState.status, 'success'],
+			text: [...prevState.text, successText]
+		}))
+		setTimeout(() => this.removeFirst(), 3000)
+	}
+	
+	APIError = (message) => {
+		const errorMessage = message ? message : failureText
+		this.setState(prevState => ({
+			status: [...prevState.status, 'failure'],
+			text: [...prevState.text, errorMessage]
+		}))
+		setTimeout(() => this.removeFirst(), 3000)
+	}
+	
+	removeFirst = () => {
+		if (this.state.status.length === 1)
+			this.setState(prevState => ({
+				...prevState,
+				status: ['api-check hide']
+			}))
+		else
+			this.setState(prevState => ({
+				status: prevState.status.splice(0, 1),
+				text: prevState.text.splice(0, 1)
+			}))
 	}
 
 	render() {
+		const messages = this.state.status.map((status, i) =>
+			<div key={i} className={status}>
+				<p>{this.state.text[i]}</p>
+			</div>
+		)
 		return (
-			<div className={this.state.status}>
-				<p>
-					{this.state.text}
-				</p>
+			<div className="api-check">
+				<div className={this.state.status}>
+					{messages}
+				</div>
 			</div>
 		)
 	}

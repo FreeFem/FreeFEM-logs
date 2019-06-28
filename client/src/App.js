@@ -47,7 +47,7 @@ class App extends React.Component {
           <Route path={TIMING_URL} component={Timing} />
         </div>
         <Footer />
-        <APICheck />
+        <APICheck errorMessage={this.state.error} />
       </BrowserRouter>
     );
   }
