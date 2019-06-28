@@ -30,17 +30,20 @@ class Coverage extends React.Component {
 	}
 
 	getCoverageInfo() {
-		fetch(API+'getCoverageInfo', {
-			method: 'GET',
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			}
-		})
-		.then(res => res.text())
-		.then(res => this.setState({coverageInfo: res}))
-		.catch(err => console.log(err))
+		// fetch(API+'getCoverageInfo', {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		'Access-Control-Allow-Origin': '*',
+		// 		'Accept': 'application/json',
+		// 		'Content-Type': 'application/json'
+		// 	}
+		// })
+		// .then(res => res.text())
+		// .then(res => this.setState({coverageInfo: res}))
+		// .catch(err => console.log(err))
+		// Use in App.js
+		// memory leaks
+		// setState when component is unmount (App.js is always mounted)
 	}
 	
 	render() {

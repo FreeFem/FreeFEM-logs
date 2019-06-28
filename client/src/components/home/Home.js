@@ -24,24 +24,25 @@ class Home extends React.Component {
 	}
 	
 	componentDidMount() {
-		fetch(API+'getCoverageSummary', {
-			method: 'GET',
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			}
-		})
-		.then(res => res.json())
-		.then(res => {
-			this.setState(prevState => ({
-				...prevState,
-				coverage: {
-					coverageDate: res.coverageDate,
-					lineCoverage: res.lineCoverage,
-					functionCoverage: res.functionCoverage
-				}
-			}))
-		})
-		.catch(err => console.log(err))
+		// fetch(API+'getCoverageSummary', {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		'Access-Control-Allow-Origin': '*'
+		// 	}
+		// })
+		// .then(res => res.json())
+		// .then(res => {
+		// 	this.setState(prevState => ({
+		// 		...prevState,
+		// 		coverage: {
+		// 			coverageDate: res.coverageDate,
+		// 			lineCoverage: res.lineCoverage,
+		// 			functionCoverage: res.functionCoverage
+		// 		}
+		// 	}))
+		// })
+		// .catch(err => console.log(err))
+		// load in App.js
 	}
 	
 	goto = (url) => {
