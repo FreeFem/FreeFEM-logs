@@ -15,34 +15,7 @@ class Home extends React.Component {
 		super(props)
 		this.state = {
 			redirect: '',
-			coverage: {
-				coverageDate: '',
-				lineCoverage: '',
-				functionCoverage: ''
-			}
 		}
-	}
-	
-	componentDidMount() {
-		// fetch(API+'getCoverageSummary', {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Access-Control-Allow-Origin': '*'
-		// 	}
-		// })
-		// .then(res => res.json())
-		// .then(res => {
-		// 	this.setState(prevState => ({
-		// 		...prevState,
-		// 		coverage: {
-		// 			coverageDate: res.coverageDate,
-		// 			lineCoverage: res.lineCoverage,
-		// 			functionCoverage: res.functionCoverage
-		// 		}
-		// 	}))
-		// })
-		// .catch(err => console.log(err))
-		// load in App.js
 	}
 	
 	goto = (url) => {
@@ -59,6 +32,9 @@ class Home extends React.Component {
 		const jobsList = Object.keys(this.props.logs).map(job =>
 			<Link to={LOGS_URL+'/'+job} key={job} className={this.props.logs[job].class} style={this.props.logs[job].style}>{job}</Link>
 		)
+		
+		console.log(this.props.coverage)
+		
 		return (
 			<div className="Home">
         <div className="home-logs" onClick={() => this.goto(LOGS_URL)}>
@@ -83,11 +59,11 @@ class Home extends React.Component {
           <h1>{COVERAGE_NAME} report</h1>
 					<div className="home-grid">
 	          <div className="home-item">Last run:</div>
-						<div className="home-value">{this.state.coverage.coverageDate}</div>
+						<div className="home-value">{this.props.coverage.coverageDate}</div>
 						<div className="home-item">Lines covered:</div>
-						<div className="home-value{this.state.lineCoverageStyle}">{this.state.coverage.lineCoverage}</div>
+						<div className="home-value{this.state.lineCoverageStyle}">{this.props.coverage.globalLinesCovered}% ({this.props.coverage.globalNbLinesCov} / {this.props.coverage.globalNbLines})</div>
 						<div className="home-item">Functions covered:</div>
-						<div className="home-value">{this.state.coverage.functionCoverage}</div>
+						<div className="home-value">{this.props.coverage.globalFunctionsCovered}% ({this.props.coverage.globalNbFuncCov} / {this.props.coverage.globalNbFunc})</div>
 					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>
