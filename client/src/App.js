@@ -14,6 +14,7 @@ import Coverage from './components/coverage/Coverage'
 import Timing from './components/timing/Timing'
 
 import { LogsLoader } from './lib/LogsLoader'
+import { CoverageLoader } from './lib/CoverageLoader'
 
 class App extends React.Component {
   constructor(props) {
@@ -26,13 +27,21 @@ class App extends React.Component {
   
   componentDidMount() {
     this.loadLogs()
+    this.loadCoverage()
   }
   
-  /*!
+  /**
    * Load all logs
    */
   loadLogs = () => {
     LogsLoader(API, this)
+  }
+  
+  /**
+    * Load all coverage data
+    */
+  loadCoverage = () => {
+    CoverageLoader(API, this)
   }
   
   render() {

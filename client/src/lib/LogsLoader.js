@@ -12,6 +12,12 @@ export function LogsLoader (API, app) {
   })
   .then(response => response.json())
   .then(response => {
+		if (response.status && response.status === 'error')
+      app.setState(prevState => ({
+        ...prevState,
+        error: 'Unable to load logs (API status: error)'
+      }))
+			
     const logs = response
     
     Object.keys(logs).forEach(job => {
@@ -58,7 +64,7 @@ export function LogsLoader (API, app) {
   .catch(err => {
     app.setState(prevState => ({
       ...prevState,
-      error: 'Unable to load logs'
+      error: 'Unable to load logs '+err
     }))
   })
 }
