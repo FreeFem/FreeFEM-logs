@@ -4,6 +4,8 @@ var router = express.Router();
 
 var parse = require('lcov-parse');
 
+const coverageData = require('../lib/watchCoverage')
+
 String.prototype.nthIndexOf = function(pattern, n) {
 	var i = -1;
 	while (n-- && i++ < this.length) {
@@ -38,6 +40,7 @@ function computeCoverage(obj) {
 
 /* Get coverage info */
 router.get('/', function(req, res, next) {
+	console.log(coverageData)
 
 	parse('../coverage/report.info', function(err, data) {
 		if (err) throw err
