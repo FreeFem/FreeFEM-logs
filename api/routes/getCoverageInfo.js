@@ -25,6 +25,17 @@ function getFileName(path) {
 	return path.substring(end)
 }
 
+function coveragePrecision(x) {
+	if (!x)
+		return 0
+  return Number.parseFloat(x).toFixed(1);
+}
+
+function computeCoverage(obj) {
+	obj.linesCovered = coveragePrecision(obj.nbLinesHit/obj.nbLines * 100)
+	obj.functionsCovered = coveragePrecision(obj.nbFunctionsHit/obj.nbFunctions * 100)
+}
+
 /* Get coverage info */
 router.get('/', function(req, res, next) {
 
@@ -73,20 +84,26 @@ router.get('/', function(req, res, next) {
 		data.map(fileInfo => {
 			covInfo.nbLinesHit += fileInfo.lines.hit
 			covInfo.nbLines += fileInfo.lines.found
-			
 			covInfo.nbFunctionsHit += fileInfo.functions.hit
 			covInfo.nbFunctions += fileInfo.functions.found
 
-			file = covInfo.directories[getDirectory(fileInfo.file)][getFileName(fileInfo.file)]
+			directory = covInfo.directories[getDirectory(fileInfo.file)]
+			directory.nbLinesHit += fileInfo.lines.hit
+			directory.nbLines += fileInfo.lines.found
+			directory.nbFunctionsHit += fileInfo.functions.hit
+			directory.nbFunctions += fileInfo.functions.found
+
+			file = directory[getFileName(fileInfo.file)]
 			file.nbLinesHit += fileInfo.lines.hit
 			file.nbLines += fileInfo.lines.found
 			file.nbFunctionsHit += fileInfo.functions.hit
 			file.nbFunctions += fileInfo.functions.found
+
+			computeCoverage(directory)
+			computeCoverage(file)
 		})
 
-		// Compute coverage percentage
-		covInfo.linesCovered = covInfo.nbLinesHit/covInfo.nbLines * 100
-		covInfo.functionsCovered = covInfo.nbFunctionsHit/covInfo.nbFunctions * 100
+		computeCoverage(covInfo)
 
 		res.send(covInfo)
 	})

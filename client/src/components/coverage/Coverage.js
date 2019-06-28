@@ -1,12 +1,6 @@
 import React from 'react'
 import './Coverage.css'
 
-function precentagePrecision(x) {
-	if (!x)
-		return 0
-  return Number.parseFloat(x).toFixed(2);
-}
-
 class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
@@ -41,15 +35,15 @@ class Coverage extends React.Component {
 		})
 	}
 
-	displayDirectories() {
+	directoriesDisplay() {
 		if (!this.state.directories)
 			return null
 		return (
-			Object.keys(this.state.directories).map(dir =>
+			Object.entries(this.state.directories).map(([dirName, dir]) =>
 				<div>
-					<div>dirName</div>
-					<div>lineCoverage</div>
-					<div>functionCoverage</div>
+					<div>{dirName}</div>
+					<div>{dir.linesCovered}% ({dir.nbLinesHit} / {dir.nbLines})</div>
+					<div>{dir.functionsCovered}% ({dir.nbFunctionsHit} / {dir.nbFunctions})</div>
 				</div>
 			)
 		)
@@ -82,12 +76,12 @@ class Coverage extends React.Component {
 						<div>Lines</div>
 						<div className="value">{this.state.linesHit}</div>
 						<div className="value">{this.state.linesTotal}</div>
-						<div className="value">{precentagePrecision(this.state.linesCovered)}%</div>
+						<div className="value">{this.state.linesCovered}%</div>
 
 						<div>Functions</div>
 						<div className="value">{this.state.functionsHit}</div>
 						<div className="value">{this.state.functionsTotal}</div>
-						<div className="value">{precentagePrecision(this.state.functionsCovered)}%</div>
+						<div className="value">{this.state.functionsCovered}%</div>
 					</div>
 				</div>
 
@@ -101,7 +95,7 @@ class Coverage extends React.Component {
 						<div className="header">Functions</div>
 					</div>
 
-					{this.displayDirectories()}
+					{this.directoriesDisplay()}
 				</div>
 
 			</div>
