@@ -26,15 +26,33 @@ class Coverage extends React.Component {
 	}
 
 	componentDidMount() {
+		this.setValues()
+	}
+
+	setValues() {
 		this.setState({
-			linesHit: this.props.coverage.globalNbLinesHit,
-			linesTotal: this.props.coverage.globalNbLines,
-			linesCovered: this.props.coverage.globalLinesCovered,
-			functionsHit: this.props.coverage.globalNbFuncHit,
-			functionsTotal: this.props.coverage.globalNbFunc,
-			functionsCovered: this.props.coverage.globalFunctionsCovered,
+			linesHit: this.props.coverage.nbLinesHit,
+			linesTotal: this.props.coverage.nbLines,
+			linesCovered: this.props.coverage.linesCovered,
+			functionsHit: this.props.coverage.nbFunctionsHit,
+			functionsTotal: this.props.coverage.nbFunctions,
+			functionsCovered: this.props.coverage.functionsCovered,
 			directories: this.props.coverage.directories
 		})
+	}
+
+	displayDirectories() {
+		if (!this.state.directories)
+			return null
+		return (
+			Object.keys(this.state.directories).map(dir =>
+				<div>
+					<div>dirName</div>
+					<div>lineCoverage</div>
+					<div>functionCoverage</div>
+				</div>
+			)
+		)
 	}
 
 	render() {
@@ -76,21 +94,14 @@ class Coverage extends React.Component {
 				<div>-</div>
 
 				<div className="table-detail">
-					<div className="header">Directory</div>
-					<div className="header">Line Coverage</div>
-					<div className="header">Functions</div>
 
-					{
-					/*
-					this.state.directories.map(dir =>
-						<div>
-							<div>dirName</div>
-							<div>lineCoverage</div>
-							<div>functionCoverage</div>
-						</div>
-					)
-					*/
-					}
+					<div>
+						<div className="header">Directory</div>
+						<div className="header">Line Coverage</div>
+						<div className="header">Functions</div>
+					</div>
+
+					{this.displayDirectories()}
 				</div>
 
 			</div>
