@@ -15,6 +15,10 @@ export function CoverageLoader(API, app) {
       
       app.setState(prevState => ({
         ...prevState,
+        status: {
+  				...prevState.status,
+  				coverage: ''
+  			},
         coverage: response
       }))
   })

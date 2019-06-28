@@ -22,9 +22,9 @@ class App extends React.Component {
     this.state = {
       error: '',
       status: {
-        logs: '',
-        coverage: '',
-        timing: ''
+        logs: 'loading',
+        coverage: 'loading',
+        timing: 'loading'
       },
       logs: {},
       coverage: {},
