@@ -63,13 +63,15 @@ router.get('/', function(req, res, next) {
 
 				nbFunctionsHit: 0,
 				nbFunctions: 0,
-				functionsCovered: 0
+				functionsCovered: 0,
+
+				files: {}
 			}
 		})
 
 		// Add file structure
 		data.map(fileInfo => {
-			covInfo.directories[getDirectory(fileInfo.file)][getFileName(fileInfo.file)] = {
+			covInfo.directories[getDirectory(fileInfo.file)].files[getFileName(fileInfo.file)] = {
 				nbLinesHit: 0,
 				nbLines: 0,
 				linesCovered: 0,
@@ -93,7 +95,7 @@ router.get('/', function(req, res, next) {
 			directory.nbFunctionsHit += fileInfo.functions.hit
 			directory.nbFunctions += fileInfo.functions.found
 
-			file = directory[getFileName(fileInfo.file)]
+			file = directory.files[getFileName(fileInfo.file)]
 			file.nbLinesHit += fileInfo.lines.hit
 			file.nbLines += fileInfo.lines.found
 			file.nbFunctionsHit += fileInfo.functions.hit
