@@ -9,41 +9,39 @@ class Coverage extends React.Component {
 			test: 'FreeFEM - unit tests',
 			date: 'temp',
 			legend: 'Rating: low: < 65% | medium: >= 65% | high: >= 80%',
-			linesHit: 0,
-			linesTotal: 0,
-			linesCovered: 0,
-			functionsHit: 0,
-			functionsTotal: 0,
-			functionsCovered: 0,
-			directories: {}
+			viewedObject: {}
 		}
 	}
 
 	componentDidMount() {
-		this.setValues()
-	}
-
-	setValues() {
 		this.setState({
-			linesHit: this.props.coverage.nbLinesHit,
-			linesTotal: this.props.coverage.nbLines,
-			linesCovered: this.props.coverage.linesCovered,
-			functionsHit: this.props.coverage.nbFunctionsHit,
-			functionsTotal: this.props.coverage.nbFunctions,
-			functionsCovered: this.props.coverage.functionsCovered,
-			directories: this.props.coverage.directories
+			viewedObject: this.props.coverage
 		})
 	}
 
 	directoriesDisplay() {
-		if (!this.state.directories)
+		if (!this.state.viewedObject.directories)
 			return null
 		return (
-			Object.entries(this.state.directories).map(([dirName, dir]) =>
-				<div>
+			Object.entries(this.state.viewedObject.directories).map(([dirName, dir]) =>
+				<div key={dirName}>
 					<div>{dirName}</div>
-					<div>{dir.linesCovered}% ({dir.nbLinesHit} / {dir.nbLines})</div>
-					<div>{dir.functionsCovered}% ({dir.nbFunctionsHit} / {dir.nbFunctions})</div>
+					<div className="value">{dir.linesCovered}% ({dir.nbLinesHit} / {dir.nbLines})</div>
+					<div className="value">{dir.functionsCovered}% ({dir.nbFunctionsHit} / {dir.nbFunctions})</div>
+				</div>
+			)
+		)
+	}
+
+	filesDisplay() {
+		if (!this.state.viewedObject.files)
+			return null
+		return (
+			Object.entries(this.state.viewedObject.files).map(([fileName, file]) =>
+				<div key={fileName}>
+					<div>{fileName}</div>
+					<div className="value">{file.linesCovered}% ({file.nbLinesHit} / {file.nbLines})</div>
+					<div className="value">{file.functionsCovered}% ({file.nbFunctionsHit} / {file.nbFunctions})</div>
 				</div>
 			)
 		)
@@ -55,16 +53,16 @@ class Coverage extends React.Component {
 
 				<div className="coverage-summary">
 					<div className="table-info">
-						<div className="header">Current view:</div>
+						<div className="label">Current view:</div>
 						<div>{this.state.view}</div>
 
-						<div className="header">Test:</div>
+						<div className="label">Test:</div>
 						<div>{this.state.test}</div>
 
-						<div className="header">Date:</div>
+						<div className="label">Date:</div>
 						<div>{this.state.date}</div>
 
-						<div className="header">Legend:</div>
+						<div className="label">Legend:</div>
 						<div>{this.state.legend}</div>
 					</div>
 					<div className="table-summary">
@@ -73,15 +71,15 @@ class Coverage extends React.Component {
 						<div className="header">Total</div>
 						<div className="header">Coverage</div>
 						
-						<div>Lines</div>
-						<div className="value">{this.state.linesHit}</div>
-						<div className="value">{this.state.linesTotal}</div>
-						<div className="value">{this.state.linesCovered}%</div>
+						<div className="label">Lines:</div>
+						<div className="value">{this.state.viewedObject.nbLinesHit}</div>
+						<div className="value">{this.state.viewedObject.nbLines}</div>
+						<div className="value">{this.state.viewedObject.linesCovered}%</div>
 
-						<div>Functions</div>
-						<div className="value">{this.state.functionsHit}</div>
-						<div className="value">{this.state.functionsTotal}</div>
-						<div className="value">{this.state.functionsCovered}%</div>
+						<div className="label">Functions:</div>
+						<div className="value">{this.state.viewedObject.nbFunctionsHit}</div>
+						<div className="value">{this.state.viewedObject.nbFunctions}</div>
+						<div className="value">{this.state.viewedObject.functionsCovered}%</div>
 					</div>
 				</div>
 
