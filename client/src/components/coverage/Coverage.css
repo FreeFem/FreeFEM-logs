@@ -10,10 +10,6 @@
 	grid-gap: 1em;
 }
 
-.coverage-detail {
-	
-}
-
 .table-info {
 	display: grid;
 	grid-template-columns: auto auto;
@@ -29,4 +25,11 @@
 
 .table-summary .value {
 	text-align: center;
+}
+
+.table-detail {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	grid-column-gap: 1em;
+	grid-row-gap: 0.3em;
 }
