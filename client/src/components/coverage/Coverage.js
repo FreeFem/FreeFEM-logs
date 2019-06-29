@@ -3,6 +3,8 @@ import './Coverage.css'
 
 import Loading from '../base/Loading'
 
+//Warning: page does not reload after fetch!
+
 class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
