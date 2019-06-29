@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express')
+var router = express.Router()
 
 const getLogsData = require('../lib/watchLogs')
 
@@ -10,7 +10,7 @@ const getLogsData = require('../lib/watchLogs')
  * Get complete tree and content of the logs directory
  */
 router.get('/', function(req, res, next) {
-  res.send(getLogsData());
-});
+  res.send(getLogsData())
+})
 
-module.exports = router;
+module.exports = router
