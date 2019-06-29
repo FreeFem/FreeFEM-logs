@@ -13,4 +13,4 @@ class Timing extends React.Component {
 	}
 }
 
-export default Timing;
+export default Timing

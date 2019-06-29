@@ -32,34 +32,34 @@ class App extends React.Component {
       timing: {}
     }
   }
-  
+
   componentDidMount() {
     this.loadLogs()
     this.loadCoverage()
     this.loadTiming()
   }
-  
+
   /**
    * Load all logs
    */
   loadLogs = () => {
     LogsLoader(API, this)
   }
-  
+
   /**
     * Load all coverage data
     */
   loadCoverage = () => {
     CoverageLoader(API, this)
   }
-  
+
   /**
     * Load all timing data
     */
   loadTiming = () => {
     TimingLoader(API, this)
   }
-  
+
   render() {
     return (
       <BrowserRouter>
@@ -74,8 +74,8 @@ class App extends React.Component {
         <Footer />
         <APICheck errorMessage={this.state.error} />
       </BrowserRouter>
-    );
+    )
   }
 }
 
-export default App;
+export default App

@@ -72,7 +72,7 @@ class Coverage extends React.Component {
 						<div className="header">Hit</div>
 						<div className="header">Total</div>
 						<div className="header">Coverage</div>
-						
+
 						<div className="label">Lines:</div>
 						<div className="value">{this.state.viewedObject.nbLinesHit}</div>
 						<div className="value">{this.state.viewedObject.nbLines}</div>
@@ -103,4 +103,4 @@ class Coverage extends React.Component {
 	}
 }
 
-export default Coverage;
+export default Coverage
