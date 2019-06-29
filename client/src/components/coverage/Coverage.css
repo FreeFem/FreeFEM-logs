@@ -16,6 +16,7 @@
 
 .label {
 	text-align: right;
+  font-weight: bold;
 }
 
 .value {
@@ -33,15 +34,26 @@
 	display: grid;
 	grid-template-columns: auto auto auto auto;
 	grid-column-gap: 1em;
+
 }
 
 .table-detail {
 	display: grid;
 	grid-column-gap: 1em;
 	grid-row-gap: 0.3em;
+  box-shadow: 2px 2px 10px #555;
 }
 
 .table-detail > div {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.table-detail > div > div {
+  padding: 0.5rem;
+  box-shadow: 1px 1px 1px #555;
+}
+
+.table-detail .header {
+  font-weight: bold;
 }
