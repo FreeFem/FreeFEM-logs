@@ -26,10 +26,11 @@ function computeCoverage(obj) {
 }
 
 function loadCoverage () {
-  console.log('loading coverage...')
+	console.log('loading coverage...')
 
   parse(COVERAGE_FILE, function(err, data) {
 		if (err) throw err
+		//fs.writeFileSync('report.json', JSON.stringify(data, null, 4))
 
 		var covInfo = {
 			nbLinesHit: 0,
@@ -67,7 +68,9 @@ function loadCoverage () {
 
 				nbFunctionsHit: 0,
 				nbFunctions: 0,
-				functionsCovered: 0
+				functionsCovered: 0,
+
+				lines: {}
 			}
 		})
 
@@ -90,14 +93,24 @@ function loadCoverage () {
 			file.nbFunctionsHit += fileInfo.functions.hit
 			file.nbFunctions += fileInfo.functions.found
 
+			fileInfo.lines.details.map(det =>
+				{
+					if(file.lines[det.line] === undefined)
+						file.lines[det.line] = 0
+					else
+						file.lines[det.line] += det.hit
+				})
+
 			computeCoverage(directory)
 			computeCoverage(file)
 		})
 
 		computeCoverage(covInfo)
 
+		//fs.writeFileSync('coverage-data.json', JSON.stringify(covInfo, null, 4))
+
 		coverageData = covInfo
-    console.log('coverage loaded!')
+		console.log('coverage loaded!')
 	})
 }
 
