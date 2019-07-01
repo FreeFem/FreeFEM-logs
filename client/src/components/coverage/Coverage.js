@@ -7,22 +7,30 @@ import Loading from '../base/Loading'
 
 //Warning: page does not reload after fetch!
 
-import { COVERAGE_URL, COVERAGE_NAME } from '../../config/Config'
+import { COVERAGE_URL, COVERAGE_NAME, COVERAGE_MID_LIMIT, COVERAGE_HI_LIMIT } from '../../config/Config'
+
+function getCoverageClass(val) {
+	if (val < COVERAGE_MID_LIMIT) return 'low'
+	if (val > COVERAGE_MID_LIMIT && val < COVERAGE_HI_LIMIT) return 'med'
+	if (val > COVERAGE_HI_LIMIT) return 'hi'
+}
 
 function lineCoverage(obj) {
+	let covClass = getCoverageClass(obj.linesCovered)
 	return (
-		<div className="value-row">
-			<div className="value">{obj.linesCovered}%</div>
-			<div className="value">{obj.nbLinesHit} / {obj.nbLines}</div>
+		<div className="row">
+			<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
+			<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
 		</div>
 	)
 }
 
 function functionCoverage(obj) {
+	let covClass = getCoverageClass(obj.functionsCovered)
 	return (
-		<div className="value-row">
-			<div className="value">{obj.functionsCovered}%</div>
-			<div className="value">{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
+		<div className="row">
+			<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
+			<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
 		</div>
 	)
 }
@@ -46,11 +54,12 @@ class Coverage extends React.Component {
 		let coverageContent
 		let content
 		let viewedObject
+
+		if (!this.props.coverage || !this.props.coverage.directories)
+			return null
 		
 		if (path.length === 1) {
 			const directories = this.props.coverage.directories
-			if (!directories)
-				return null
 			navView =
 				<div className="previous">
 					{COVERAGE_NAME}
@@ -58,7 +67,7 @@ class Coverage extends React.Component {
 			content =
 				Object.entries(directories).map(([dirName, dir]) =>
 					<div key={dirName}>
-						<div><Link to={COVERAGE_URL+'/'+dirName} key={dirName}>{dirName}</Link></div>
+						<div className="cell"><Link to={COVERAGE_URL+'/'+dirName} key={dirName}>{dirName}</Link></div>
 						{lineCoverage(dir)}
 						{functionCoverage(dir)}
 					</div>)
@@ -66,20 +75,18 @@ class Coverage extends React.Component {
 		}
 		else if (path.length === 3) {
 			const directory = path[1]+'/'+path[2]
-			if (!this.props.coverage.directories[directory])
-				return null
 			const files = this.props.coverage.directories[directory].files
 			navView =
 				<div className="previous">
 					<Link to={COVERAGE_URL}>
-						{COVERAGE_NAME}
+						{COVERAGE_NAME}{' '}
 					</Link>
 					&lt; {directory}
 				</div>
 			content =
 				Object.entries(files).map(([fileName, file]) =>
 					<div key={fileName}>
-						<div><Link to={COVERAGE_URL+'/'+directory+'/'+fileName} key={fileName}>{fileName}</Link></div>
+						<div className="cell"><Link to={COVERAGE_URL+'/'+directory+'/'+fileName} key={fileName}>{fileName}</Link></div>
 						{lineCoverage(file)}
 						{functionCoverage(file)}
 					</div>)
@@ -87,19 +94,15 @@ class Coverage extends React.Component {
 		}
 		else if (path.length === 4) {
 			const directory = path[1]+'/'+path[2]
-			if (!this.props.coverage.directories[directory])
-				return null
 			const file = path[3]
 			const fileContent = this.props.coverage.directories[directory].files[file]
-			if (!fileContent)
-				return null
 			navView =
 				<div className="previous">
 					<Link to={COVERAGE_URL}>
-						&lt; {COVERAGE_NAME}
+						{COVERAGE_NAME}{' '}
 					</Link>
 					<Link to={COVERAGE_URL+'/'+directory}>
-						&lt; {directory}
+						&lt; {directory}{' '}
 					</Link>
 					&lt; {file}
 				</div>
@@ -129,13 +132,18 @@ class Coverage extends React.Component {
 				</div>
 		}
 		else {
-			legend = 'Rating: low: < 65% | medium: >= 65% | high: >= 80 %'
+			legend =
+				<div className="legend">
+					<div className="leg low">low: &lt; {COVERAGE_MID_LIMIT}</div>
+					<div className="leg med">medium: >= {COVERAGE_MID_LIMIT}%</div>
+					<div className="leg hi">high: >= {COVERAGE_HI_LIMIT}%</div>
+				</div>
 			coverageContent =
 				<div className="coverage-listview">
 					<div>
-						<div className="header">Directory</div>
-						<div className="header">Line Coverage</div>
-						<div className="header">Functions</div>
+						<div className="header cell">Directory</div>
+						<div className="header cell">Line Coverage</div>
+						<div className="header cell">Functions</div>
 					</div>
 					{content}
 				</div>
@@ -147,34 +155,34 @@ class Coverage extends React.Component {
 
 				<div className="coverage-summary">
 					<div className="table-info">
-						<div className="label">Current view:</div>
-						<div>{navView}</div>
+						<div className="label cell">Current view:</div>
+						<div className="cell">{navView}</div>
 
-						<div className="label">Test:</div>
-						<div>{test}</div>
+						<div className="label cell">Test:</div>
+						<div className="cell">{test}</div>
 
-						<div className="label">Date:</div>
-						<div>{date}</div>
+						<div className="label cell">Date:</div>
+						<div className="cell">{date}</div>
 
-						<div className="label">Legend:</div>
-						<div>{legend}</div>
+						<div className="label cell">Legend:</div>
+						<div className="cell">{legend}</div>
 					</div>
 
 					<div className="table-summary">
-						<div className="header"></div>
-						<div className="header">Hit</div>
-						<div className="header">Total</div>
-						<div className="header">Coverage</div>
+						<div className="header cell"></div>
+						<div className="header cell">Hit</div>
+						<div className="header cell">Total</div>
+						<div className="header cell">Coverage</div>
 
-						<div className="label">Lines:</div>
-						<div className="value">{viewedObject.nbLinesHit}</div>
-						<div className="value">{viewedObject.nbLines}</div>
-						<div className="value">{viewedObject.linesCovered}%</div>
+						<div className="label cell">Lines:</div>
+						<div className="value cell">{viewedObject.nbLinesHit}</div>
+						<div className="value cell">{viewedObject.nbLines}</div>
+						<div className={"value cell "+getCoverageClass(viewedObject.linesCovered)}>{viewedObject.linesCovered}%</div>
 
-						<div className="label">Functions:</div>
-						<div className="value">{viewedObject.nbFunctionsHit}</div>
-						<div className="value">{viewedObject.nbFunctions}</div>
-						<div className="value">{viewedObject.functionsCovered}%</div>
+						<div className="label cell">Functions:</div>
+						<div className="value cell">{viewedObject.nbFunctionsHit}</div>
+						<div className="value cell">{viewedObject.nbFunctions}</div>
+						<div className={"value cell "+getCoverageClass(viewedObject.linesCovered)}>{viewedObject.functionsCovered}%</div>
 					</div>
 				</div>
 

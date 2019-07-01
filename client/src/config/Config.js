@@ -19,3 +19,6 @@ export const COVERAGE_URL = '/coverage'
 
 export const TIMING_NAME = 'Timing'
 export const TIMING_URL = '/timing'
+
+export const COVERAGE_MID_LIMIT = 65
+export const COVERAGE_HI_LIMIT = 80
