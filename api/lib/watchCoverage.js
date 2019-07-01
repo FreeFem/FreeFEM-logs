@@ -4,25 +4,14 @@ var parse = require('lcov-parse')
 const COVERAGE_FILE = '../coverage/report.info'
 let coverageData = {}
 
-String.prototype.nthIndexOf = function(pattern, n) {
-	var i = -1
-	while (n-- && i++ < this.length) {
-		i = this.indexOf(pattern, i)
-		if (i < 0) break
-	}
-	return i
-}
-
 function getDirectory(path) {
-	var nbOfDashes = (path.match(/\//g) || []).length
-	var start = path.nthIndexOf('/', nbOfDashes-2)
-	var end = path.lastIndexOf('/')
-	return path.substring(start, end)
+	var elts = path.split('/')
+	return elts[elts.length-3]+'/'+elts[elts.length-2]
 }
 
 function getFileName(path) {
-	var end = path.lastIndexOf('/') + 1
-	return path.substring(end)
+	var elts = path.split('/')
+	return elts[elts.length-1]
 }
 
 function coveragePrecision(x) {
@@ -39,7 +28,7 @@ function computeCoverage(obj) {
 function loadCoverage () {
   console.log('loading coverage...')
 
-  parse('../coverage/report.info', function(err, data) {
+  parse(COVERAGE_FILE, function(err, data) {
 		if (err) throw err
 
 		var covInfo = {

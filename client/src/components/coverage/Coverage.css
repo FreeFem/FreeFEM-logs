@@ -1,13 +1,14 @@
 .Coverage {
 	flex: 1 1 auto;
   display: flex;
-  flex-direction: column;
+	flex-direction: column;
 }
 
 .coverage-summary {
 	display: grid;
 	grid-template-columns: auto auto;
 	grid-gap: 1em;
+	margin-bottom: 2em;
 }
 
 .header {
@@ -17,6 +18,12 @@
 .label {
 	text-align: right;
   font-weight: bold;
+}
+
+.value-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-column-gap: 1em;
 }
 
 .value {
@@ -37,23 +44,28 @@
 
 }
 
-.table-detail {
+.coverage-listview {
 	display: grid;
 	grid-column-gap: 1em;
 	grid-row-gap: 0.3em;
   box-shadow: 2px 2px 10px #555;
 }
 
-.table-detail > div {
+.coverage-listview > div {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
-.table-detail > div > div {
+.coverage-listview > div > div {
   padding: 0.5rem;
-  box-shadow: 1px 1px 1px #555;
+	box-shadow: 1px 1px 1px #555;
 }
 
-.table-detail .header {
+.coverage-listview .header {
   font-weight: bold;
+}
+
+.coverage-codeview-header {
+	display: grid;
+	grid-template-columns: auto auto auto;
 }
