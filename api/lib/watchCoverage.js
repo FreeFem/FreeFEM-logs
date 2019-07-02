@@ -1,7 +1,7 @@
 const fs = require('fs')
 var parse = require('lcov-parse')
 
-const COVERAGE_FILE = '../coverage/report.info'
+const COVERAGE_FILE = '../coverage/report.info.out'
 let coverageData = {}
 
 function getDirectory(path) {
@@ -30,7 +30,6 @@ function loadCoverage () {
 
   parse(COVERAGE_FILE, function(err, data) {
 		if (err) throw err
-		//fs.writeFileSync('report.json', JSON.stringify(data, null, 4))
 
 		var covInfo = {
 			nbLinesHit: 0,
@@ -43,6 +42,9 @@ function loadCoverage () {
 
 			directories: {}
 		}
+
+		var fileStats = fs.statSync(COVERAGE_FILE)
+		covInfo['date'] = fileStats.mtime
 
 		// Build directories
 		data.map(fileInfo => {

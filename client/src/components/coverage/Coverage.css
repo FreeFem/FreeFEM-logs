@@ -34,7 +34,7 @@
 
 .Coverage .row {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr;
 }
 
 .Coverage .cell {
@@ -73,7 +73,7 @@
 
 .Coverage .coverage-listview > div {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 0.5fr 1fr 1fr;
 }
 
 .Coverage .coverage-listview > div > div {
@@ -87,4 +87,16 @@
 .Coverage .coverage-codeview-header {
 	display: grid;
 	grid-template-columns: auto auto auto;
+}
+
+.Coverage .coverageBar {
+	margin: 0.5em;
+	background-color: white;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.Coverage .coverageProgress {
+	height: 100%;
+	width: 1%;
 }

@@ -19,6 +19,9 @@ function lineCoverage(obj) {
 	let covClass = getCoverageClass(obj.linesCovered)
 	return (
 		<div className="row">
+			<div className="coverageBar">
+				<div className={"coverageProgress "+getCoverageClass(obj.linesCovered)} style={{width: parseInt(obj.linesCovered)}}></div>
+			</div>
 			<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
 			<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
 		</div>
@@ -29,6 +32,9 @@ function functionCoverage(obj) {
 	let covClass = getCoverageClass(obj.functionsCovered)
 	return (
 		<div className="row">
+			<div className="coverageBar">
+				<div className={"coverageProgress "+getCoverageClass(obj.functionsCovered)} style={{width: parseInt(obj.functionsCovered)}}></div>
+			</div>
 			<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
 			<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
 		</div>
@@ -48,7 +54,7 @@ class Coverage extends React.Component {
 		
 		let navView
 		let test = 'FreeFEM - unit tests'
-		let date = 'temp'
+		let date = this.props.coverage.date
 		let legend
 
 		let coverageContent
@@ -64,8 +70,8 @@ class Coverage extends React.Component {
 				<div className="previous">
 					{COVERAGE_NAME}
 				</div>
-			content =
-				Object.entries(directories).map(([dirName, dir]) =>
+			content = //([A, dirA], [B, dirB]) => dirA.linesCovered-dirB.linesCovered
+				Object.entries(directories).sort().map(([dirName, dir]) =>
 					<div key={dirName}>
 						<div className="cell"><Link to={COVERAGE_URL+'/'+dirName} key={dirName}>{dirName}</Link></div>
 						{lineCoverage(dir)}
@@ -79,12 +85,12 @@ class Coverage extends React.Component {
 			navView =
 				<div className="previous">
 					<Link to={COVERAGE_URL}>
-						{COVERAGE_NAME}{' '}
+						{COVERAGE_NAME}
 					</Link>
-					&lt; {directory}
+					{' < '+directory}
 				</div>
 			content =
-				Object.entries(files).map(([fileName, file]) =>
+				Object.entries(files).sort().map(([fileName, file]) =>
 					<div key={fileName}>
 						<div className="cell"><Link to={COVERAGE_URL+'/'+directory+'/'+fileName} key={fileName}>{fileName}</Link></div>
 						{lineCoverage(file)}
@@ -99,12 +105,13 @@ class Coverage extends React.Component {
 			navView =
 				<div className="previous">
 					<Link to={COVERAGE_URL}>
-						{COVERAGE_NAME}{' '}
+						{COVERAGE_NAME}
 					</Link>
+					{' < '}
 					<Link to={COVERAGE_URL+'/'+directory}>
-						&lt; {directory}{' '}
+						{directory}
 					</Link>
-					&lt; {file}
+					{' < '+file}
 				</div>
 			content =
 				<pre><code>code</code></pre>
@@ -113,8 +120,9 @@ class Coverage extends React.Component {
 		else {
 			navView =
 				<div className="previous">
+					{' < '}
 					<Link to={COVERAGE_URL}>
-						&lt; {COVERAGE_NAME}
+						{COVERAGE_NAME}
 					</Link>
 				</div>
 		}
