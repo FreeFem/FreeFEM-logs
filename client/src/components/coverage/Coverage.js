@@ -2,12 +2,8 @@ import React from 'react'
 import './Coverage.css'
 
 import { Link } from 'react-router-dom'
-
+import { API, COVERAGE_URL, COVERAGE_NAME, COVERAGE_MID_LIMIT, COVERAGE_HI_LIMIT } from '../../config/Config'
 import Loading from '../base/Loading'
-
-//Warning: page does not reload after fetch!
-
-import { COVERAGE_URL, COVERAGE_NAME, COVERAGE_MID_LIMIT, COVERAGE_HI_LIMIT } from '../../config/Config'
 
 function getCoverageClass(val) {
 	if (val < COVERAGE_MID_LIMIT) return 'low'
@@ -58,7 +54,7 @@ class Coverage extends React.Component {
 		let legend
 
 		let coverageContent
-		let content
+		let content = ''
 		let viewedObject
 
 		if (!this.props.coverage || !this.props.coverage.directories)
@@ -101,7 +97,6 @@ class Coverage extends React.Component {
 		else if (path.length === 4) {
 			const directory = path[1]+'/'+path[2]
 			const file = path[3]
-			const fileContent = this.props.coverage.directories[directory].files[file]
 			navView =
 				<div className="previous">
 					<Link to={COVERAGE_URL}>
@@ -113,8 +108,21 @@ class Coverage extends React.Component {
 					</Link>
 					{' < '+file}
 				</div>
-			content =
-				<pre><code>code</code></pre>
+			fetch(API+'getSourceCode', {
+				method: 'POST',
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Content-Type': 'application/json',
+					'Accept': 'text/plain;charset=UTF-8'
+				},
+				body: JSON.stringify({
+					path: directory+'/'+file
+				})
+			})
+			.then(response => {
+				content = Object.assign('', response.text())
+			})
+			console.log(content)
 			viewedObject = this.props.coverage.directories[directory].files[file]
 		}
 		else {
@@ -136,7 +144,9 @@ class Coverage extends React.Component {
 						<div>Line data</div>
 						<div>Source code</div>
 					</div>
-					<div className="content">source code...</div>
+					<div className="content">
+						{content}
+					</div>
 				</div>
 		}
 		else {

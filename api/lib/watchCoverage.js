@@ -47,7 +47,7 @@ function loadCoverage () {
 		}
 
 		var fileStats = fs.statSync(COVERAGE_FILE)
-		covInfo['date'] = fileStats.mtime
+		covInfo['date'] = fileStats.mtime.toUTCString()
 
 		// Build directories
 		data.map(fileInfo => {
@@ -116,7 +116,6 @@ function loadCoverage () {
 
 			computeCoverage(directory)
 		})
-
 		computeCoverage(covInfo)
 
 		coverageData = covInfo
