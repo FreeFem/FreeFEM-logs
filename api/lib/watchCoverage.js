@@ -78,22 +78,21 @@ function loadCoverage () {
 		// Retrieve info
 		data.map(fileInfo => {
 
-			directory = covInfo.directories[getDirectory(fileInfo.file)]
-			file = directory.files[getFileName(fileInfo.file)]
+			file = covInfo.directories[getDirectory(fileInfo.file)].files[getFileName(fileInfo.file)]
 
 			fileInfo.lines.details.map(det =>
 				{(!file.lines[det.line]) ? (file.lines[det.line] = det.hit) : (file.lines[det.line] += det.hit)})
 			fileInfo.functions.details.map(det =>
 				{(!file.functions[det.name]) ? (file.functions[det.name] = det.hit) : (file.functions[det.name] += det.hit)})
-			
-			file.nbLines = Math.max(file.nbLines, fileInfo.lines.found)
-			file.nbFunctions = Math.max(file.nbFunctions, fileInfo.functions.found)
 		})
 		
 		Object.values(covInfo.directories).map(directory => {
 			Object.values(directory.files).map(file => {
 				file.nbLinesHit = Object.values(file.lines).filter(nbHits => nbHits !== 0).length
 				file.nbFunctionsHit = Object.values(file.functions).filter(nbHits => nbHits !== 0).length
+
+				file.nbLines = Object.keys(file.lines).length
+				file.nbFunctions = Object.keys(file.functions).length
 
 				directory.nbLinesHit += file.nbLinesHit
 				directory.nbFunctionsHit += file.nbFunctionsHit
@@ -114,8 +113,6 @@ function loadCoverage () {
 		})
 
 		computeCoverage(covInfo)
-
-		//fs.writeFileSync('coverage-data.json', JSON.stringify(covInfo, null, 4))
 
 		coverageData = covInfo
 		console.log('coverage loaded!')
