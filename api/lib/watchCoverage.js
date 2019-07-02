@@ -28,6 +28,9 @@ function computeCoverage(obj) {
 function loadCoverage () {
 	console.log('loading coverage...')
 
+	if (!fs.existsSync(COVERAGE_FILE))
+		return
+
   parse(COVERAGE_FILE, function(err, data) {
 		if (err) throw err
 
@@ -87,7 +90,7 @@ function loadCoverage () {
 			fileInfo.functions.details.map(det =>
 				{(!file.functions[det.name]) ? (file.functions[det.name] = det.hit) : (file.functions[det.name] += det.hit)})
 		})
-		
+
 		Object.values(covInfo.directories).map(directory => {
 			Object.values(directory.files).map(file => {
 				file.nbLinesHit = Object.values(file.lines).filter(nbHits => nbHits !== 0).length
