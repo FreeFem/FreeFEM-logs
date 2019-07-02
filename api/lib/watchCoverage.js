@@ -44,7 +44,7 @@ function loadCoverage () {
 			directories: {}
 		}
 
-		// Add directories
+		// Build directories
 		data.map(fileInfo => {
 			covInfo.directories[getDirectory(fileInfo.file)] = {
 				nbLinesHit: 0,
@@ -59,7 +59,7 @@ function loadCoverage () {
 			}
 		})
 
-		// Add file structure
+		// Build files
 		data.map(fileInfo => {
 			covInfo.directories[getDirectory(fileInfo.file)].files[getFileName(fileInfo.file)] = {
 				nbLinesHit: 0,
@@ -70,39 +70,47 @@ function loadCoverage () {
 				nbFunctions: 0,
 				functionsCovered: 0,
 
-				lines: {}
+				lines: {},
+				functions: {}
 			}
 		})
 
 		// Retrieve info
 		data.map(fileInfo => {
-			covInfo.nbLinesHit += fileInfo.lines.hit
-			covInfo.nbLines += fileInfo.lines.found
-			covInfo.nbFunctionsHit += fileInfo.functions.hit
-			covInfo.nbFunctions += fileInfo.functions.found
 
 			directory = covInfo.directories[getDirectory(fileInfo.file)]
-			directory.nbLinesHit += fileInfo.lines.hit
-			directory.nbLines += fileInfo.lines.found
-			directory.nbFunctionsHit += fileInfo.functions.hit
-			directory.nbFunctions += fileInfo.functions.found
-
 			file = directory.files[getFileName(fileInfo.file)]
-			file.nbLinesHit += fileInfo.lines.hit
-			file.nbLines += fileInfo.lines.found
-			file.nbFunctionsHit += fileInfo.functions.hit
-			file.nbFunctions += fileInfo.functions.found
 
 			fileInfo.lines.details.map(det =>
-				{
-					if(file.lines[det.line] === undefined)
-						file.lines[det.line] = 0
-					else
-						file.lines[det.line] += det.hit
-				})
+				{(!file.lines[det.line]) ? (file.lines[det.line] = det.hit) : (file.lines[det.line] += det.hit)})
+			fileInfo.functions.details.map(det =>
+				{(!file.functions[det.name]) ? (file.functions[det.name] = det.hit) : (file.functions[det.name] += det.hit)})
+			
+			file.nbLines = Math.max(file.nbLines, fileInfo.lines.found)
+			file.nbFunctions = Math.max(file.nbFunctions, fileInfo.functions.found)
+		})
+		
+		Object.values(covInfo.directories).map(directory => {
+			Object.values(directory.files).map(file => {
+				file.nbLinesHit = Object.values(file.lines).filter(nbHits => nbHits !== 0).length
+				file.nbFunctionsHit = Object.values(file.functions).filter(nbHits => nbHits !== 0).length
+
+				directory.nbLinesHit += file.nbLinesHit
+				directory.nbFunctionsHit += file.nbFunctionsHit
+
+				directory.nbLines += file.nbLines
+				directory.nbFunctions += file.nbFunctions
+
+				computeCoverage(file)
+			})
+
+			covInfo.nbLinesHit += directory.nbLinesHit
+			covInfo.nbFunctionsHit += directory.nbFunctionsHit
+
+			covInfo.nbLines += directory.nbLines
+			covInfo.nbFunctions += directory.nbFunctions
 
 			computeCoverage(directory)
-			computeCoverage(file)
 		})
 
 		computeCoverage(covInfo)
