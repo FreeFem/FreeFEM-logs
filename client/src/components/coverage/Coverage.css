@@ -85,8 +85,7 @@
 }
 
 .Coverage .coverage-codeview {
-	display: flex;
-	flex-direction: column;
+	overflow: auto;
 }
 
 .Coverage .codeview-header {
@@ -112,7 +111,7 @@
 
 .Coverage pre.source {
   font-family: monospace;
-  white-space: pre;
+	white-space: pre;
 }
 
 .Coverage .hit {
