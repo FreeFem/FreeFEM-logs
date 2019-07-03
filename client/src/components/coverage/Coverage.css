@@ -5,9 +5,9 @@
 }
 
 .Coverage .coverage-summary {
-	display: grid;
-	grid-template-columns: auto auto;
-	grid-gap: 1em;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 	margin-bottom: 2em;
 }
 
@@ -84,9 +84,43 @@
   font-weight: bold;
 }
 
-.Coverage .coverage-codeview-header {
+.Coverage .coverage-codeview {
+	display: flex;
+	flex-direction: column;
+}
+
+.Coverage .codeview-header {
+	font-weight: bold;
+}
+
+.Coverage .coverage-codeview .row {
 	display: grid;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: 6em 7em auto;
+}
+
+.Coverage .coverage-codeview .lineNumber {
+	text-align: right;
+	background-color: #EFE383;
+	padding-right: 0.5em;
+	margin-right: 0.5em;
+}
+
+.Coverage .coverage-codeview .lineData {
+	text-align: right;
+	padding-right: 1em;
+}
+
+.Coverage pre.source {
+  font-family: monospace;
+  white-space: pre;
+}
+
+.Coverage .hit {
+	background-color: #CAD7FE;
+}
+
+.Coverage .notHit {
+	background-color: #FF6230;
 }
 
 .Coverage .coverageBar {

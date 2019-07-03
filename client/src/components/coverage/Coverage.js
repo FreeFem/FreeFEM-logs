@@ -11,12 +11,18 @@ function getCoverageClass(val) {
 	if (val > COVERAGE_HI_LIMIT) return 'hi'
 }
 
+function getLineCoverageClass(line) {
+	if (line === undefined)
+		return ''
+	return (line === 0) ? 'notHit' : 'hit'
+}
+
 function lineCoverage(obj) {
 	let covClass = getCoverageClass(obj.linesCovered)
 	return (
 		<div className="row">
 			<div className="coverageBar">
-				<div className={"coverageProgress "+getCoverageClass(obj.linesCovered)} style={{width: parseInt(obj.linesCovered)}}></div>
+				<div className={"coverageProgress "+getCoverageClass(obj.linesCovered)} style={{width: Math.round(obj.linesCovered)}}></div>
 			</div>
 			<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
 			<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
@@ -29,7 +35,7 @@ function functionCoverage(obj) {
 	return (
 		<div className="row">
 			<div className="coverageBar">
-				<div className={"coverageProgress "+getCoverageClass(obj.functionsCovered)} style={{width: parseInt(obj.functionsCovered)}}></div>
+				<div className={"coverageProgress "+getCoverageClass(obj.functionsCovered)} style={{width: Math.round(obj.functionsCovered)}}></div>
 			</div>
 			<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
 			<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
@@ -37,10 +43,28 @@ function functionCoverage(obj) {
 	)
 }
 
+function buildLineContent(input, file) {
+	var lines = input.split(/(?:\r\n|\r|\n)/g);
+	return Object.entries(lines).map(([index, element]) =>
+		<div className="row" key={Number(index)+1}>
+			<div className="lineNumber">{Number(index)+1}</div>
+			<div className={"lineData "+getLineCoverageClass(file.lines[Number(index)+1])}>
+				{(file.lines[Number(index)+1] === undefined ? '' : file.lines[Number(index)+1]) + ' :'}
+			</div>
+			<span className={getLineCoverageClass(file.lines[Number(index)+1])}>
+				{element}
+			</span>
+		</div>
+	)
+}
+
 class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {}
+		this.state = {
+			prevURL: '',
+			content: 'content'
+		}
 	}
 
 	render() {
@@ -54,7 +78,7 @@ class Coverage extends React.Component {
 		let legend
 
 		let coverageContent
-		let content = ''
+		let content
 		let viewedObject
 
 		if (!this.props.coverage || !this.props.coverage.directories)
@@ -108,22 +132,23 @@ class Coverage extends React.Component {
 					</Link>
 					{' < '+file}
 				</div>
-			fetch(API+'getSourceCode', {
-				method: 'POST',
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Content-Type': 'application/json',
-					'Accept': 'text/plain;charset=UTF-8'
-				},
-				body: JSON.stringify({
-					path: directory+'/'+file
-				})
-			})
-			.then(response => {
-				content = Object.assign('', response.text())
-			})
-			console.log(content)
 			viewedObject = this.props.coverage.directories[directory].files[file]
+			if (this.state.prevURL !== currentURL) {
+				this.setState({prevURL: currentURL})
+				fetch(API+'getSourceCode', {
+					method: 'POST',
+					headers: {
+						'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						path: directory+'/'+file
+					})
+				})
+				.then(res => res.text())
+				.then(res => buildLineContent(res, viewedObject))
+				.then(res => this.setState({content: res}))
+			}
 		}
 		else {
 			navView =
@@ -136,17 +161,22 @@ class Coverage extends React.Component {
 		}
 
 		if (path.length === 4) {
-			legend = 'Lines: hit not hit'
+			legend =
+				<div className="legend">
+					<div className="leg">Lines:</div>
+					<div className="leg hit">hit</div>
+					<div className="leg notHit">not hit</div>
+				</div>
 			coverageContent =
 				<div className="coverage-codeview">
-					<div className="coverage-codeview-header">
+					<div className="codeview-header row">
 						<div></div>
 						<div>Line data</div>
 						<div>Source code</div>
 					</div>
-					<div className="content">
-						{content}
-					</div>
+					<pre className="source">
+						{this.state.content}
+					</pre>
 				</div>
 		}
 		else {
