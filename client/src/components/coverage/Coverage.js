@@ -5,66 +5,107 @@ import { Link } from 'react-router-dom'
 import { API, COVERAGE_URL, COVERAGE_NAME, COVERAGE_MID_LIMIT, COVERAGE_HI_LIMIT } from '../../config/Config'
 import Loading from '../base/Loading'
 
-function getCoverageClass(val) {
-	if (val < COVERAGE_MID_LIMIT) return 'low'
-	if (val > COVERAGE_MID_LIMIT && val < COVERAGE_HI_LIMIT) return 'med'
-	if (val > COVERAGE_HI_LIMIT) return 'hi'
-}
-
-function getLineCoverageClass(line) {
-	if (line === undefined)
-		return ''
-	return (line === 0) ? 'notHit' : 'hit'
-}
-
-function lineCoverage(obj) {
-	let covClass = getCoverageClass(obj.linesCovered)
-	return (
-		<div className="row">
-			<div className="coverageBar">
-				<div className={"coverageProgress "+getCoverageClass(obj.linesCovered)} style={{width: Math.round(obj.linesCovered)}}></div>
-			</div>
-			<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
-			<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
-		</div>
-	)
-}
-
-function functionCoverage(obj) {
-	let covClass = getCoverageClass(obj.functionsCovered)
-	return (
-		<div className="row">
-			<div className="coverageBar">
-				<div className={"coverageProgress "+getCoverageClass(obj.functionsCovered)} style={{width: Math.round(obj.functionsCovered)}}></div>
-			</div>
-			<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
-			<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
-		</div>
-	)
-}
-
-function buildLineContent(input, file) {
-	var lines = input.split(/(?:\r\n|\r|\n)/g);
-	return Object.entries(lines).map(([index, element]) =>
-		<div className="row" key={Number(index)+1}>
-			<div className="lineNumber">{Number(index)+1}</div>
-			<div className={"lineData "+getLineCoverageClass(file.lines[Number(index)+1])}>
-				{(file.lines[Number(index)+1] === undefined ? '' : file.lines[Number(index)+1]) + ' :'}
-			</div>
-			<span className={getLineCoverageClass(file.lines[Number(index)+1])}>
-				{element}
-			</span>
-		</div>
-	)
-}
-
 class Coverage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			prevURL: '',
-			content: 'content'
+			contentStatus: 'loading',
+			content: ''
 		}
+	}
+
+	getCoverageClass(val) {
+		if (val < COVERAGE_MID_LIMIT) return 'low'
+		if (val > COVERAGE_MID_LIMIT && val < COVERAGE_HI_LIMIT) return 'med'
+		if (val > COVERAGE_HI_LIMIT) return 'hi'
+	}
+	
+	getLineCoverageClass(line) {
+		if (line === undefined)
+			return ''
+		return (line === 0) ? 'notHit' : 'hit'
+	}
+	
+	lineCoverage(obj) {
+		let covClass = this.getCoverageClass(obj.linesCovered)
+		return (
+			<div className="row">
+				<div className="coverageBar">
+					<div className={"coverageProgress "+this.getCoverageClass(obj.linesCovered)} style={{width: Math.round(obj.linesCovered)}}></div>
+				</div>
+				<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
+				<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
+			</div>
+		)
+	}
+	
+	functionCoverage(obj) {
+		let covClass = this.getCoverageClass(obj.functionsCovered)
+		return (
+			<div className="row">
+				<div className="coverageBar">
+					<div className={"coverageProgress "+this.getCoverageClass(obj.functionsCovered)} style={{width: Math.round(obj.functionsCovered)}}></div>
+				</div>
+				<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
+				<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
+			</div>
+		)
+	}
+	
+	buildLineContent(input, file) {
+		var lines = input.split(/(?:\r\n|\r|\n)/g);
+		return Object.entries(lines).map(([index, element]) =>
+			<div className="row" key={Number(index)+1}>
+				<div className="lineNumber">{Number(index)+1}</div>
+				<div className={"lineData "+this.getLineCoverageClass(file.lines[Number(index)+1])}>
+					{(file.lines[Number(index)+1] === undefined ? '' : file.lines[Number(index)+1]) + ' :'}
+				</div>
+				<div>
+					<span className={this.getLineCoverageClass(file.lines[Number(index)+1])}>
+						{element}
+					</span>
+				</div>
+			</div>
+		)
+	}
+	
+	componentDidUpdate(prevProps) {
+		const currentURL = this.props.location.pathname
+		let path = currentURL.split('/')
+		path = path.filter(e => e !== '')
+
+		// if not viewing a source code file
+		if (path.length !== 4)
+			return
+
+		// if props not received yet
+		if (!this.props.coverage.directories)
+			return
+
+		// if source code already loaded
+		if (this.props.location.pathname === prevProps.location.pathname && this.state.contentStatus !== 'loading')
+			return
+
+		const directory = path[1]+'/'+path[2]
+		const file = path[3]
+		const viewedObject = this.props.coverage.directories[directory].files[file]
+
+		fetch(API+'getSourceCode', {
+			method: 'POST',
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				path: path[1]+'/'+path[2]+'/'+path[3]
+			})
+		})
+		.then(res => res.text())
+		.then(res => this.buildLineContent(res, viewedObject))
+		.then(res => this.setState({
+			contentStatus: 'loaded',
+			content: res
+		}))
 	}
 
 	render() {
@@ -90,12 +131,13 @@ class Coverage extends React.Component {
 				<div className="previous">
 					{COVERAGE_NAME}
 				</div>
-			content = //([A, dirA], [B, dirB]) => dirA.linesCovered-dirB.linesCovered
+			//([A, dirA], [B, dirB]) => dirA.linesCovered-dirB.linesCovered
+			content =
 				Object.entries(directories).sort().map(([dirName, dir]) =>
 					<div key={dirName}>
 						<div className="cell"><Link to={COVERAGE_URL+'/'+dirName} key={dirName}>{dirName}</Link></div>
-						{lineCoverage(dir)}
-						{functionCoverage(dir)}
+						{this.lineCoverage(dir)}
+						{this.functionCoverage(dir)}
 					</div>)
 			viewedObject = this.props.coverage
 		}
@@ -113,8 +155,8 @@ class Coverage extends React.Component {
 				Object.entries(files).sort().map(([fileName, file]) =>
 					<div key={fileName}>
 						<div className="cell"><Link to={COVERAGE_URL+'/'+directory+'/'+fileName} key={fileName}>{fileName}</Link></div>
-						{lineCoverage(file)}
-						{functionCoverage(file)}
+						{this.lineCoverage(file)}
+						{this.functionCoverage(file)}
 					</div>)
 			viewedObject = this.props.coverage.directories[directory]
 		}
@@ -133,22 +175,6 @@ class Coverage extends React.Component {
 					{' < '+file}
 				</div>
 			viewedObject = this.props.coverage.directories[directory].files[file]
-			if (this.state.prevURL !== currentURL) {
-				this.setState({prevURL: currentURL})
-				fetch(API+'getSourceCode', {
-					method: 'POST',
-					headers: {
-						'Access-Control-Allow-Origin': '*',
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						path: directory+'/'+file
-					})
-				})
-				.then(res => res.text())
-				.then(res => buildLineContent(res, viewedObject))
-				.then(res => this.setState({content: res}))
-			}
 		}
 		else {
 			navView =
@@ -175,6 +201,7 @@ class Coverage extends React.Component {
 						<div>Source code</div>
 					</div>
 					<pre className="source">
+						<Loading status={this.state.contentStatus} />
 						{this.state.content}
 					</pre>
 				</div>
@@ -225,15 +252,15 @@ class Coverage extends React.Component {
 						<div className="label cell">Lines:</div>
 						<div className="value cell">{viewedObject.nbLinesHit}</div>
 						<div className="value cell">{viewedObject.nbLines}</div>
-						<div className={"value cell "+getCoverageClass(viewedObject.linesCovered)}>{viewedObject.linesCovered}%</div>
+						<div className={"value cell "+this.getCoverageClass(viewedObject.linesCovered)}>{viewedObject.linesCovered}%</div>
 
 						<div className="label cell">Functions:</div>
 						<div className="value cell">{viewedObject.nbFunctionsHit}</div>
 						<div className="value cell">{viewedObject.nbFunctions}</div>
-						<div className={"value cell "+getCoverageClass(viewedObject.linesCovered)}>{viewedObject.functionsCovered}%</div>
+						<div className={"value cell "+this.getCoverageClass(viewedObject.linesCovered)}>{viewedObject.functionsCovered}%</div>
 					</div>
 				</div>
-
+				
 				{coverageContent}
 
 			</div>
