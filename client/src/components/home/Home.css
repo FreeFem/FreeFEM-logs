@@ -15,7 +15,11 @@
 
 .Home div.home-grid {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: max-content auto;
+}
+
+.Home div.home-grid > div {
+  padding: 0.5rem;
 }
 
 .Home div.home-item {

@@ -9,7 +9,7 @@
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: flex-start;
-	margin-bottom: 2em;
+	margin-bottom: 1em;
 }
 
 .Coverage .header {
@@ -118,7 +118,7 @@
 }
 
 .Coverage pre.source {
-  font-family: monospace;
+  font-size: 0.75em;
 	white-space: pre;
 	max-width: calc(100vw - 2rem);
 	overflow: auto;
