@@ -66,10 +66,10 @@ class App extends React.Component {
         <Header />
         <Nav />
         <div id="content">
-          <Route exact path={HOME_URL} render={(props) => <Home {...props} status={this.state.status} logs={this.state.logs} coverage={this.state.coverage} />} />
+          <Route exact path={HOME_URL} render={(props) => <Home {...props} status={this.state.status} logs={this.state.logs} coverage={this.state.coverage} timing={this.state.timing} />} />
           <Route path={LOGS_URL} render={(props) => <Logs {...props} status={this.state.status.logs} logs={this.state.logs} />} />
           <Route path={COVERAGE_URL} render={(props) => <Coverage {...props} status={this.state.status.coverage} coverage={this.state.coverage} />} />
-          <Route path={TIMING_URL} component={Timing} />
+          <Route path={TIMING_URL} render={(props) => <Timing {...props} status={this.state.status.timing} timing={this.state.timing} />} />
         </div>
         <Footer />
         <APICheck errorMessage={this.state.error} />

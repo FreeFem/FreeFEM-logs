@@ -1,0 +1,19 @@
+.function {
+  padding: 0.5em;
+  border-left-style: solid;  
+}
+
+.parameter {
+  padding: 0.5em;
+  border-left-style: solid;  
+}
+
+.type {
+  padding: 0.5em;
+  border-left-style: solid; 
+}
+
+.time {
+  padding: 0.5em;
+  border-left-style: solid; 
+}

@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index')
 var getLogs = require('./routes/getLogs')
 var getCoverageInfo = require('./routes/getCoverageInfo')
 var getSourceCode = require('./routes/getSourceCode')
+var getTiming = require('./routes/getTiming')
 
 var app = express()
 
@@ -23,6 +24,7 @@ app.use('/', indexRouter)
 app.use('/getLogs', getLogs)
 app.use('/getCoverageInfo', getCoverageInfo)
 app.use('/getSourceCode', getSourceCode)
+app.use('/getTiming', getTiming)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
