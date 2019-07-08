@@ -71,6 +71,7 @@
 .Coverage .coverage-listview {
 	display: grid;
   box-shadow: 2px 2px 10px #555;
+	overflow: auto;
 }
 
 .Coverage .coverage-listview > div {
