@@ -91,7 +91,7 @@ nav a {
   flex: 1 1 auto;
   display: flex;
   padding: 1rem;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 footer {

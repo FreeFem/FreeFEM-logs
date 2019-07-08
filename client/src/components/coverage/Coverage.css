@@ -2,7 +2,7 @@
 	flex: 1 1 auto;
   display: flex;
 	flex-direction: column;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .Coverage .coverage-summary {
@@ -149,10 +149,6 @@
 @media screen and (max-width: 700px) {
 	.Coverage .coverage-summary {
 		flex-direction: column !important;
-	}
-
-	.Coverage .coverage-listview {
-		overflow: auto;
 	}
 
 	.Coverage .coverage-listview > div {
