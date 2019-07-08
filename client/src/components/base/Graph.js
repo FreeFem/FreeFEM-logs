@@ -8,16 +8,18 @@ class Graph extends React.Component {
 	}
 
 	dataToPolylinePoints(width, height, data) {
-		let polylinePoints = ''
-
+		data = Object.values(data)
+		if (data.length <= 1)
+			return ''
+		
 		let stepX = width/(data.length-1)
 		let maxValue = Math.max.apply(Math, data)
-		let minValue = Math.min.apply(Math, data)
-
-		data.forEach((element, index) => {
-			polylinePoints += (stepX*index) +','+ (height-(element*height/maxValue)) +'\n'
-		})
-		return polylinePoints
+		if (maxValue <= 0)
+			maxValue = 1
+		
+		return Object.entries(data).map(([index, element]) =>
+			(stepX*index) +','+ (height-(element*height/maxValue))
+		)
 	}
 
 	render() {

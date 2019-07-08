@@ -136,22 +136,45 @@ function loadTiming () {
 
 	for (var fi = 0; fi < finalOutput.length; fi++) { // for each function
 		if (finalOutput[fi].types) {
-			for (var tyi = 0; tyi < finalOutput[fi].types.length; tyi++) { // for each type
+			// for each type
+			for (var tyi = 0; tyi < finalOutput[fi].types.length; tyi++) {
 				if (finalOutput[fi].types[tyi].times) {
 					for (var t = 0; t < finalOutput[fi].types[tyi].times.length; t++) {
 						finalOutput[fi].types[tyi].times[t] = []
 						timingFilesData.forEach(file => {
 							finalOutput[fi].types[tyi].times[t].push(file[fi].types[tyi].times[t])
 						})
+						finalOutput[fi].types[tyi].times[t].push(Math.random())
+						finalOutput[fi].types[tyi].times[t].push(Math.random())
 					}
 				}
 			}
 		}
+		if (finalOutput[fi].parameters) {
+			// for each parameter
+			for (var pi = 0; pi < finalOutput[fi].parameters.length; pi++) {
+				if (finalOutput[fi].parameters[pi].times) {
+					for (var t = 0; t < finalOutput[fi].parameters[pi].times.length; t++) {
+						finalOutput[fi].parameters[pi].times[t] = []
+						timingFilesData.forEach(file => {
+							finalOutput[fi].parameters[pi].times[t].push(file[fi].parameters[pi].times[t])
+						})
+					}
+				}
+			}
+		}
+		if (finalOutput[fi].times) {
+			// for each time
+			for (var t = 0; t < finalOutput[fi].times.length; t++) {
+				finalOutput[fi].times[t] = []
+				timingFilesData.forEach(file => {
+					finalOutput[fi].times[t].push(file[fi].times[t])
+				})
+			}
+		}
 	}
 
-	fs.writeFileSync(TIMING_DIRECTORY+'/finalreport', JSON.stringify(finalOutput, null, 2))
-	
-	timingData = output
+	timingData = finalOutput
 
 	console.log('timing loaded!')
 }

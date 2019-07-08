@@ -63,7 +63,7 @@ class Timing extends React.Component {
 		return (
 			<div className="time">
 				{Object.values(obj.times).map(timeValues =>
-					<div>{timeValues.length}</div>
+					<Graph width="500" height="30" data={timeValues}/>
 				)}
 			</div>
 		)
@@ -74,7 +74,9 @@ class Timing extends React.Component {
 			<div className="Timing">
 				<h2 className="header">{'Functions found: '+this.props.timing.length}</h2>
 				<Loading status={this.props.status} />
-				{this.displayFunctions(this.props.timing)}
+				<div className="content">
+					{this.displayFunctions(this.props.timing)}
+				</div>
 			</div>
 		)
 	}
