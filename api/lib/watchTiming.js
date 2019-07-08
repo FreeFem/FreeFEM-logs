@@ -1,7 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const readline = require('readline')
-
 const UNIT_DIRECTORY = '../../FreeFem-sources/unit'
 const TIMING_DIRECTORY = '../timing'
 let timingData = {}
@@ -48,8 +46,7 @@ function addParam(obj, line) {
 function addTime(obj, line) {
 	if (!obj.times)
 		obj.times = []
-	var time = {value: getValue(line)}
-	obj.times.push(time)
+	obj.times.push(getValue(line))
 }
 
 
@@ -58,9 +55,6 @@ function loadTiming () {
 
 	if (!fs.existsSync(UNIT_DIRECTORY))
 		return
-
-	let unitTestsDirStats = fs.lstatSync(UNIT_DIRECTORY)
-	let timingReportPath = TIMING_DIRECTORY + '/' + unitTestsDirStats.dev + '.json'
 
 	let directories = []
 	let logFiles = []
@@ -84,14 +78,18 @@ function loadTiming () {
 
 	let output = []
 
-	logFiles.forEach(file => {
-		var lineReader = readline.createInterface({input: fs.createReadStream(file)})
+	for (var f = 0; f < logFiles.length; f++) {
+		var lines = require('fs').readFileSync(logFiles[f], 'utf-8')
+		.split(/\n|\r/)
+    .filter(Boolean);
 
 		let lastFunc, lastType, lastFlag
 
-		lineReader.on('line', function(line) {
+		for (var i = 0; i < lines.length; i++) {
+			let line = lines[i]
+
 			if (!line || line[0] !== '_')
-				return
+				continue
 
 			var lineFlag = getFlag(line)
 			switch(lineFlag) {
@@ -116,12 +114,43 @@ function loadTiming () {
 				default:
 					break;
 			}
-		})
-	})
+		}
+	}
 
-	// output json into file
-	fs.writeFileSync(timingReportPath, output)
+	// Ooutput current timing into timing folder
+	let unitTestsDirStats = fs.lstatSync(UNIT_DIRECTORY)
+	let timingReportPath = TIMING_DIRECTORY + '/' + unitTestsDirStats.dev + '.json'
+	fs.writeFileSync(timingReportPath, JSON.stringify(output, null, 2))
 
+	let timingFiles = fs.readdirSync(TIMING_DIRECTORY)
+	let timingFilesData = []
+	for (var i = 0; i < timingFiles.length; i++) {
+		data = fs.readFileSync(TIMING_DIRECTORY+'/'+timingFiles[i])
+		timingFilesData.push(JSON.parse(data))
+	}
+
+	// Use last report as template to go through all the reports
+
+	// deep copy of the previously built output
+	let finalOutput = JSON.parse(JSON.stringify(output))
+
+	for (var fi = 0; fi < finalOutput.length; fi++) { // for each function
+		if (finalOutput[fi].types) {
+			for (var tyi = 0; tyi < finalOutput[fi].types.length; tyi++) { // for each type
+				if (finalOutput[fi].types[tyi].times) {
+					for (var t = 0; t < finalOutput[fi].types[tyi].times.length; t++) {
+						finalOutput[fi].types[tyi].times[t] = []
+						timingFilesData.forEach(file => {
+							finalOutput[fi].types[tyi].times[t].push(file[fi].types[tyi].times[t])
+						})
+					}
+				}
+			}
+		}
+	}
+
+	fs.writeFileSync(TIMING_DIRECTORY+'/finalreport', JSON.stringify(finalOutput, null, 2))
+	
 	timingData = output
 
 	console.log('timing loaded!')

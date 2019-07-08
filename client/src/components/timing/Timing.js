@@ -2,6 +2,7 @@ import React from 'react'
 import './Timing.css'
 
 import Loading from '../base/Loading'
+import Graph from '../base/Graph';
 
 class Timing extends React.Component {
 	constructor(props) {
@@ -9,10 +10,12 @@ class Timing extends React.Component {
 		this.state = {}
 	}
 
-	displayFunctions() {
+	displayFunctions(timing) {
+		if (!timing)
+			return null
 		return (
 			<div className="function">
-				{Object.values(this.props.timing).map(func =>
+				{Object.values(timing).map(func =>
 					<div>
 						<div>function: {func.value}</div>
 						{this.displayTypes(func)}
@@ -59,8 +62,8 @@ class Timing extends React.Component {
 			return null
 		return (
 			<div className="time">
-				{Object.values(obj.times).map(time =>
-					<div>time: {time.value}</div>
+				{Object.values(obj.times).map(timeValues =>
+					<div>{timeValues.length}</div>
 				)}
 			</div>
 		)
@@ -68,11 +71,10 @@ class Timing extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="Timing">
+				<h2 className="header">{'Functions found: '+this.props.timing.length}</h2>
 				<Loading status={this.props.status} />
-				<div>{'Total functions: '+this.props.timing.length}</div>
-				<p></p>
-				{this.displayFunctions()}
+				{this.displayFunctions(this.props.timing)}
 			</div>
 		)
 	}
