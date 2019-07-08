@@ -2,6 +2,7 @@
 	flex: 1 1 auto;
   display: flex;
 	flex-direction: column;
+	overflow: hidden;
 }
 
 .Coverage .coverage-summary {
@@ -88,7 +89,6 @@
 .Coverage .coverage-codeview {
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
 	box-shadow: 2px 2px 10px #555;
 }
 
@@ -121,7 +121,7 @@
   font-size: 0.75em;
 	white-space: pre;
 	max-width: calc(100vw - 2rem);
-	overflow: auto;
+	overflow-x: auto;
 	margin: 0;
 }
 
@@ -143,4 +143,18 @@
 .Coverage .coverageProgress {
 	height: 100%;
 	width: 1%;
+}
+
+@media screen and (max-width: 700px) {
+	.Coverage .coverage-summary {
+		flex-direction: column !important;
+	}
+
+	.Coverage .coverage-listview {
+		overflow: auto;
+	}
+
+	.Coverage .coverage-listview > div {
+		min-width: 1000px;
+	}
 }
