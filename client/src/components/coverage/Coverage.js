@@ -19,7 +19,7 @@ class Coverage extends React.Component {
 		if (val >= COVERAGE_MID_LIMIT && val < COVERAGE_HI_LIMIT) return 'med'
 		if (val >= COVERAGE_HI_LIMIT) return 'hi'
 	}
-	
+
 	getLineCoverageClass(line) {
 		if (line === undefined)
 			return ''
@@ -31,27 +31,27 @@ class Coverage extends React.Component {
 		return (
 			<div className="row">
 				<div className="coverageBar">
-					<div className={"coverageProgress "+this.getCoverageClass(obj.linesCovered)} style={{width: Math.round(obj.linesCovered)}}></div>
+					<div className={"coverageProgress "+this.getCoverageClass(obj.linesCovered)} style={{width: Math.round(obj.linesCovered)+'%'}}></div>
 				</div>
 				<div className={'cell value '+covClass}>{obj.linesCovered}%</div>
 				<div className={'cell value '+covClass}>{obj.nbLinesHit} / {obj.nbLines}</div>
 			</div>
 		)
 	}
-	
+
 	functionCoverage(obj) {
 		let covClass = this.getCoverageClass(obj.functionsCovered)
 		return (
 			<div className="row">
 				<div className="coverageBar">
-					<div className={"coverageProgress "+this.getCoverageClass(obj.functionsCovered)} style={{width: Math.round(obj.functionsCovered)}}></div>
+					<div className={"coverageProgress "+this.getCoverageClass(obj.functionsCovered)} style={{width: Math.round(obj.functionsCovered)+'%'}}></div>
 				</div>
 				<div className={'cell value '+covClass}>{obj.functionsCovered}%</div>
 				<div className={'cell value '+covClass}>{obj.nbFunctionsHit} / {obj.nbFunctions}</div>
 			</div>
 		)
 	}
-	
+
 	buildLineContent(input, file) {
 		var lines = input.split(/(?:\r\n|\r|\n)/g);
 		return Object.entries(lines).map(([index, element]) =>
@@ -68,7 +68,7 @@ class Coverage extends React.Component {
 			</div>
 		)
 	}
-	
+
 	componentDidUpdate(prevProps) {
 		const currentURL = this.props.location.pathname
 		let path = currentURL.split('/')
@@ -152,7 +152,7 @@ class Coverage extends React.Component {
 						<div className={"value cell "+this.getCoverageClass(viewedObject.linesCovered)}>{viewedObject.functionsCovered}%</div>
 					</div>
 				</div>
-				
+
 				{coverageContent}
 
 			</div>
@@ -163,7 +163,7 @@ class Coverage extends React.Component {
 		const currentURL = this.props.location.pathname
 		let path = currentURL.split('/')
 		path = path.filter(e => e !== '')
-		
+
 		let navView
 		let test = 'FreeFEM - unit tests'
 		let date = this.props.coverage.date
@@ -175,7 +175,7 @@ class Coverage extends React.Component {
 
 		if (!this.props.coverage || !this.props.coverage.directories)
 			return null
-		
+
 		if (path.length === 1) {
 			const directories = this.props.coverage.directories
 			navView =
