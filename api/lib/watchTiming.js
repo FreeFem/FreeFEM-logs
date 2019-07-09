@@ -20,11 +20,9 @@ function getValue(line) {
 
 
 function addFunc(obj, line) {
-	var func = {
-		value: getValue(line)
-	}
-	obj.push(func)
-	return func
+	var func = getValue(line)
+	obj[func] = {}
+	return obj[func]
 }
 
 function addType(obj, line) {
@@ -76,7 +74,7 @@ function loadTiming () {
 		dirPath = directories.shift();
 	} while (directories.length > 0)
 
-	let output = []
+	let output = {}
 
 	for (var f = 0; f < logFiles.length; f++) {
 		var lines = require('fs').readFileSync(logFiles[f], 'utf-8')
@@ -129,23 +127,25 @@ function loadTiming () {
 		timingFilesData.push(JSON.parse(data))
 	}
 
-	// Use last report as template to go through all the reports
+	// Use first report as template to go through all the reports
+	// deep copy of the first timing report
+	let finalOutput = JSON.parse(JSON.stringify(timingFilesData[0]))
 
-	// deep copy of the previously built output
-	let finalOutput = JSON.parse(JSON.stringify(output))
-
-	for (var fi = 0; fi < finalOutput.length; fi++) { // for each function
+	//for (var fi = 0; fi < finalOutput.length; fi++) { // for each function
+	Object.entries(finalOutput).map(([fi, func]) => {
 		if (finalOutput[fi].types) {
 			// for each type
-			for (var tyi = 0; tyi < finalOutput[fi].types.length; tyi++) {
-				if (finalOutput[fi].types[tyi].times) {
-					for (var t = 0; t < finalOutput[fi].types[tyi].times.length; t++) {
-						finalOutput[fi].types[tyi].times[t] = []
+			for (var ti = 0; ti < finalOutput[fi].types.length; ti++) {
+				if (finalOutput[fi].types[ti].times) {
+					for (var t = 0; t < finalOutput[fi].types[ti].times.length; t++) {
+						finalOutput[fi].types[ti].times[t] = []
 						timingFilesData.forEach(file => {
-							finalOutput[fi].types[tyi].times[t].push(file[fi].types[tyi].times[t])
+							var time = undefined
+							if (file[fi])
+								time = file[fi].types[ti].times[t]
+							finalOutput[fi].types[ti].times[t].push(time)
 						})
-						finalOutput[fi].types[tyi].times[t].push(Math.random())
-						finalOutput[fi].types[tyi].times[t].push(Math.random())
+						console.log(finalOutput[fi].types[ti].times[t])
 					}
 				}
 			}
@@ -157,8 +157,12 @@ function loadTiming () {
 					for (var t = 0; t < finalOutput[fi].parameters[pi].times.length; t++) {
 						finalOutput[fi].parameters[pi].times[t] = []
 						timingFilesData.forEach(file => {
-							finalOutput[fi].parameters[pi].times[t].push(file[fi].parameters[pi].times[t])
+							var time = undefined
+							if (file[fi])
+								time = file[fi].parameters[pi].times[t]
+							finalOutput[fi].parameters[pi].times[t].push(time)
 						})
+						console.log(finalOutput[fi].parameters[pi].times[t])
 					}
 				}
 			}
@@ -168,11 +172,15 @@ function loadTiming () {
 			for (var t = 0; t < finalOutput[fi].times.length; t++) {
 				finalOutput[fi].times[t] = []
 				timingFilesData.forEach(file => {
-					finalOutput[fi].times[t].push(file[fi].times[t])
+					var time = undefined
+					if (file[fi] && file[fi].times)
+						time = file[fi].times[t]
+					finalOutput[fi].times[t].push(time)
 				})
+				console.log(finalOutput[fi].times[t])
 			}
 		}
-	}
+	})
 
 	timingData = finalOutput
 

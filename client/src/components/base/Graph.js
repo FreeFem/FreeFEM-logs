@@ -7,34 +7,106 @@ class Graph extends React.Component {
 		this.state = {}
 	}
 
-	dataToPolylinePoints(width, height, data) {
-		data = Object.values(data)
-		if (data.length <= 1)
-			return ''
+	drawGraphLine(w, h, d, s) {
+		let linesPoints = []
+		let missingTimeIndexes = []
+		for (var t = 0; t < d.length; t++) {
+			if (d[t] === null)
+				missingTimeIndexes.push(t)
+		}
+
+		if (missingTimeIndexes.length > 0) {
+			console.log(d)
+			console.log(missingTimeIndexes)
+		}
+
+		let start = 0, end
+		for (var i = 0; i < missingTimeIndexes.length + 1; i++) {
+			end = (i < missingTimeIndexes.length) ? (missingTimeIndexes[i] -1) : (d.length - 1)
+
+			if (missingTimeIndexes.length > 0) {
+				console.log(start+' '+end)
+			}
+
+			if (end-start <= 1) {
+				start = end + 2
+				continue
+			}
+
+			var points = this.dataToPoints(w, h, d, s, start, end)
+			linesPoints.push(points)
+			start = end + 2
+		}
+
+		return (
+			Object.values(linesPoints).map(linePoints =>
+				<polyline
+					fill="none"
+					stroke="#0074d9"
+					strokeWidth="2"
+					points={linePoints}
+				/>
+			)
+		)
+	}
+
+	dataToPoints(width, height, data, stepX, start, end) {
+		if (data.length <= 0)
+			return []
+
+		start = start ? start : 0
+		end = end ? end : data.length
+
+		// SVG margin
+		let margin = 6
+		width -= margin
+		height -= margin
 		
-		let stepX = width/(data.length-1)
+		stepX = stepX ? stepX : (width/(data.length-1))
 		let maxValue = Math.max.apply(Math, data)
-		if (maxValue <= 0)
-			maxValue = 1
+		if (!maxValue)
+			maxValue = 0.001
 		
-		return Object.entries(data).map(([index, element]) =>
-			(stepX*index) +','+ (height-(element*height/maxValue))
+		let points = []
+		for (var d = start; d <= end; d++)
+			points.push((margin/2 + stepX*d) +','+ (margin/2 + height-(data[d]*height/maxValue)))
+		return points
+	}
+
+	pointToGraphPoint(index, data, point) {
+		if (!data[index])
+			return null
+		var coords = point.split(',')
+		var x = coords[0]
+		var y = coords[1]
+		return (
+			<g className="dataPoint" key={index}>
+				<text x={x} y={y} textAnchor="middle">{data[index]}</text>
+				<circle cx={x} cy={y} r="3"/>
+			</g>
+		)
+	}
+
+	drawGraphPoints(w, h, d, s) {
+		let points = this.dataToPoints(w, h, d, s)
+
+		return (
+			Object.entries(points).map(([index, point]) => 
+				this.pointToGraphPoint(index, d, point)
+			)
 		)
 	}
 
 	render() {
 		let w = this.props.width
 		let h = this.props.height
-		let d = this.props.data
+		let d = Object.values(this.props.data)
+		let s = this.props.stepX
 
 		return (
-			<svg viewBox={"0 0 "+w+" "+h} className="chart" style={{width: w, height: h}}>
-				<polyline
-					fill="none"
-					stroke="#0074d9"
-					strokeWidth="2"
-					points={this.dataToPolylinePoints(w, h, d)}
-				/>
+			<svg viewBox={"0 0 "+w+" "+h} className="graph" style={{width: w, height: h}}>
+				{this.drawGraphLine(w, h, d, s)}
+				{this.drawGraphPoints(w, h, d, s)}
 			</svg>
 		)
 	}

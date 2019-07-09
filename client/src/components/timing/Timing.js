@@ -15,9 +15,9 @@ class Timing extends React.Component {
 			return null
 		return (
 			<div className="function">
-				{Object.values(timing).map(func =>
+				{Object.entries(timing).map(([funcName, func]) =>
 					<div>
-						<div>function: {func.value}</div>
+						<div>function: {funcName}</div>
 						{this.displayTypes(func)}
 						{this.displayParameters(func)}
 						{this.displayTimes(func)}
@@ -63,7 +63,7 @@ class Timing extends React.Component {
 		return (
 			<div className="time">
 				{Object.values(obj.times).map(timeValues =>
-					<Graph width="500" height="30" data={timeValues}/>
+					<Graph width="1000" height="30" data={timeValues} stepX="50"/>
 				)}
 			</div>
 		)
@@ -72,7 +72,7 @@ class Timing extends React.Component {
 	render() {
 		return (
 			<div className="Timing">
-				<h2 className="header">{'Functions found: '+this.props.timing.length}</h2>
+				<h2 className="header">{'Functions found: '+Object.keys(this.props.timing).length}</h2>
 				<Loading status={this.props.status} />
 				<div className="content">
 					{this.displayFunctions(this.props.timing)}

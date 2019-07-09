@@ -1,5 +1,19 @@
-.chart {
+.graph {
   background: white;
   border-left: 1px dotted #555;
   border-bottom: 1px dotted #555;
+}
+
+.dataPoint circle {
+  fill: red;
+  stroke-width: 1;
+}
+
+.dataPoint text {
+  visibility: hidden;
+}
+
+
+.dataPoint:hover text {
+  visibility: visible;
 }
