@@ -7,8 +7,8 @@ import Loading from '../base/Loading'
 import MyLink from '../base/Link'
 
 import {
-	LOGS_NAME, COVERAGE_NAME, TIMING_NAME,
-	LOGS_URL, COVERAGE_URL, TIMING_URL,
+	LOGS_NAME, COVERAGE_NAME, UNITLOGS_NAME, TIMING_NAME,
+	LOGS_URL, COVERAGE_URL, UNITLOGS_URL, TIMING_URL,
 	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
 	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
 } from '../../config/Config'
@@ -67,6 +67,14 @@ class Home extends React.Component {
 						<div className="home-value">{this.props.coverage.linesCovered}% ({this.props.coverage.nbLinesHit} / {this.props.coverage.nbLines})</div>
 						<div className="home-item">Functions covered:</div>
 						<div className="home-value">{this.props.coverage.functionsCovered}% ({this.props.coverage.nbFunctionsHit} / {this.props.coverage.nbFunctions})</div>
+					</div>
+        </div>
+				<div className="home-unittests" onClick={() => this.goto(UNITLOGS_URL)}>
+          <h1>{UNITLOGS_NAME} report</h1>
+          <Loading status={this.props.status.unitlogs} />
+					<div className="home-grid">
+	          <div className="home-item">Successful tests:</div>
+						<div className="home-value">{this.props.unitlogs.validTests} / {this.props.unitlogs.totalTests}</div>
 					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>

@@ -17,6 +17,9 @@ export const LOGS_HI_COLOR = 'black'
 export const COVERAGE_NAME = 'Coverage'
 export const COVERAGE_URL = '/coverage'
 
+export const UNITLOGS_NAME = 'Unit-Tests'
+export const UNITLOGS_URL = '/unitlogs'
+
 export const TIMING_NAME = 'Timing'
 export const TIMING_URL = '/timing'
 

@@ -1,14 +1,15 @@
 const fs = require('fs')
 const path = require('path')
-const UNIT_DIRECTORY = '../../FreeFem-sources/unit'
+const UNIT_DIRECTORY = '../unit'
 const TIMING_DIRECTORY = '../timing'
-let timingData = {}
+const watchUnitLogs = require('./watchUnitLogs')
 
 const functionDefinition = '__FUNCTION_DEFINITION__ '
 const typeDefinition = '__TYPE_DEFINITION__ '
 const timeElapsed = '__TIME_ELAPSED__ '
 const parameterDefinition = '__PARAMETER_DEFINITION__ '
 
+let timingData = {}
 
 function getFlag(line) {
 	return line.substring(0, line.indexOf(' ')) + ' '
@@ -19,10 +20,18 @@ function getValue(line) {
 }
 
 
-function addFunc(obj, line) {
-	var func = getValue(line)
-	obj[func] = {}
-	return obj[func]
+function addFunc(functions, line) {
+	var funcName = getValue(line)
+	var func = funcName
+	if (functions[funcName]) { // function already exists (duplicate or same name!)
+		let i = 2
+		while (functions[func]) {
+			func = funcName+'('+i+')'
+			i++
+		}
+	}
+	functions[func] = {}
+	return functions[func]
 }
 
 function addType(obj, line) {
@@ -51,37 +60,21 @@ function addTime(obj, line) {
 function loadTiming () {
 	console.log('loading timing...')
 
-	if (!fs.existsSync(UNIT_DIRECTORY))
-		return
+	let output = {
+		functions: {}
+	}
 
-	let directories = []
-	let logFiles = []
+	let unitLogs = watchUnitLogs()
 
-	let dirPath = UNIT_DIRECTORY
+	for (var f = 0; f < unitLogs.logFilesContent.length; f++) {
+		let fileContent = unitLogs.logFilesContent[f]
 
-	do {
-		var dirOrFiles = []
-		var dirContent = fs.readdirSync(dirPath)
-		dirContent.forEach(elt => {
-			dirOrFiles.push(dirPath+'/'+elt)
-		})
-		
-		// get .log files
-		dirOrFiles.filter(elt => path.extname(elt) === '.log').forEach(file => logFiles.push(file))
-		// get directories
-		dirOrFiles.filter(elt => fs.lstatSync(elt).isDirectory()).forEach(dir => directories.push(dir))
-		
-		dirPath = directories.shift();
-	} while (directories.length > 0)
-
-	let output = {}
-
-	for (var f = 0; f < logFiles.length; f++) {
-		var lines = require('fs').readFileSync(logFiles[f], 'utf-8')
-		.split(/\n|\r/)
-    .filter(Boolean);
+		var lines = fileContent.split(/\n|\r/).filter(Boolean);
 
 		let lastFunc, lastType, lastFlag
+
+		//console.log()
+		//console.log(unitLogs.logFiles[f])
 
 		for (var i = 0; i < lines.length; i++) {
 			let line = lines[i]
@@ -89,24 +82,30 @@ function loadTiming () {
 			if (!line || line[0] !== '_')
 				continue
 
+			//console.log(line)
+
 			var lineFlag = getFlag(line)
 			switch(lineFlag) {
 				case functionDefinition:
-					lastFunc = addFunc(output, line)
+					lastFunc = addFunc(output.functions, line)
 					lastFlag = lineFlag
 					break;
 				case typeDefinition:
+					if (!lastFunc)
+						continue
 					lastType = addType(lastFunc, line)
 					lastFlag = lineFlag
 					break;
 				case parameterDefinition:
+					if (!lastFunc)
+						continue
 					lastType = addParam(lastFunc, line)
 					lastFlag = lineFlag
 					break;
 				case timeElapsed:
-					if (lastFlag === typeDefinition || lastFlag === parameterDefinition)
+					if (lastType && (lastFlag === typeDefinition || lastFlag === parameterDefinition))
 						addTime(lastType, line)
-					else if (lastFlag === functionDefinition)
+					else if (lastFunc && lastFlag === functionDefinition)
 						addTime(lastFunc, line)
 					break;
 				default:
@@ -115,7 +114,7 @@ function loadTiming () {
 		}
 	}
 
-	// Ooutput current timing into timing folder
+	// Output current timing into timing folder
 	let unitTestsDirStats = fs.lstatSync(UNIT_DIRECTORY)
 	let timingReportPath = TIMING_DIRECTORY + '/' + unitTestsDirStats.dev + '.json'
 	fs.writeFileSync(timingReportPath, JSON.stringify(output, null, 2))
@@ -131,59 +130,57 @@ function loadTiming () {
 	// deep copy of the first timing report
 	let finalOutput = JSON.parse(JSON.stringify(timingFilesData[0]))
 
-	//for (var fi = 0; fi < finalOutput.length; fi++) { // for each function
-	Object.entries(finalOutput).map(([fi, func]) => {
-		if (finalOutput[fi].types) {
+	Object.entries(finalOutput.functions).map(([fi, func]) => {
+		if (finalOutput.functions[fi].types) {
 			// for each type
-			for (var ti = 0; ti < finalOutput[fi].types.length; ti++) {
-				if (finalOutput[fi].types[ti].times) {
-					for (var t = 0; t < finalOutput[fi].types[ti].times.length; t++) {
-						finalOutput[fi].types[ti].times[t] = []
+			for (var ti = 0; ti < finalOutput.functions[fi].types.length; ti++) {
+				if (finalOutput.functions[fi].types[ti].times) {
+					for (var t = 0; t < finalOutput.functions[fi].types[ti].times.length; t++) {
+						finalOutput.functions[fi].types[ti].times[t] = []
 						timingFilesData.forEach(file => {
 							var time = undefined
-							if (file[fi])
-								time = file[fi].types[ti].times[t]
-							finalOutput[fi].types[ti].times[t].push(time)
+							if (file.functions[fi])
+								time = file.functions[fi].types[ti].times[t]
+							finalOutput.functions[fi].types[ti].times[t].push(time)
 						})
-						console.log(finalOutput[fi].types[ti].times[t])
+						//console.log(finalOutput.functions[fi].types[ti].times[t])
 					}
 				}
 			}
 		}
-		if (finalOutput[fi].parameters) {
+		if (finalOutput.functions[fi].parameters) {
 			// for each parameter
-			for (var pi = 0; pi < finalOutput[fi].parameters.length; pi++) {
-				if (finalOutput[fi].parameters[pi].times) {
-					for (var t = 0; t < finalOutput[fi].parameters[pi].times.length; t++) {
-						finalOutput[fi].parameters[pi].times[t] = []
+			for (var pi = 0; pi < finalOutput.functions[fi].parameters.length; pi++) {
+				if (finalOutput.functions[fi].parameters[pi].times) {
+					for (var t = 0; t < finalOutput.functions[fi].parameters[pi].times.length; t++) {
+						finalOutput.functions[fi].parameters[pi].times[t] = []
 						timingFilesData.forEach(file => {
 							var time = undefined
-							if (file[fi])
-								time = file[fi].parameters[pi].times[t]
-							finalOutput[fi].parameters[pi].times[t].push(time)
+							if (file.functions[fi])
+								time = file.functions[fi].parameters[pi].times[t]
+							finalOutput.functions[fi].parameters[pi].times[t].push(time)
 						})
-						console.log(finalOutput[fi].parameters[pi].times[t])
+						//console.log(finalOutput.functions[fi].parameters[pi].times[t])
 					}
 				}
 			}
 		}
-		if (finalOutput[fi].times) {
+		if (finalOutput.functions[fi].times) {
 			// for each time
-			for (var t = 0; t < finalOutput[fi].times.length; t++) {
-				finalOutput[fi].times[t] = []
+			for (var t = 0; t < finalOutput.functions[fi].times.length; t++) {
+				finalOutput.functions[fi].times[t] = []
 				timingFilesData.forEach(file => {
 					var time = undefined
-					if (file[fi] && file[fi].times)
-						time = file[fi].times[t]
-					finalOutput[fi].times[t].push(time)
+					if (file.functions[fi])
+						time = file.functions[fi].times[t]
+					finalOutput.functions[fi].times[t].push(time)
 				})
-				console.log(finalOutput[fi].times[t])
+				//console.log(finalOutput.functions[fi].times[t])
 			}
 		}
 	})
 
 	timingData = finalOutput
-
 	console.log('timing loaded!')
 }
 

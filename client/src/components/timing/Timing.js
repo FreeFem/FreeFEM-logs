@@ -3,28 +3,12 @@ import './Timing.css'
 
 import Loading from '../base/Loading'
 import Graph from '../base/Graph';
+import { throws } from 'assert';
 
 class Timing extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {}
-	}
-
-	displayFunctions(timing) {
-		if (!timing)
-			return null
-		return (
-			<div className="function">
-				{Object.entries(timing).map(([funcName, func]) =>
-					<div>
-						<div>function: {funcName}</div>
-						{this.displayTypes(func)}
-						{this.displayParameters(func)}
-						{this.displayTimes(func)}
-					</div>
-				)}
-			</div>
-		)
 	}
 
 	displayTypes(obj) {
@@ -69,14 +53,39 @@ class Timing extends React.Component {
 		)
 	}
 
+	displayHeader() {
+		if (!this.props.timing || !this.props.timing.functions)
+			return null
+		return (
+			<h3 className="header">
+				<div>{'Functions found: '+Object.keys(this.props.timing.functions).length}</div>
+			</h3>
+		)
+	}
+
+	displayContent() {
+		if (!this.props.timing || !this.props.timing.functions)
+			return null
+		return (
+			<div className="content">
+				{Object.entries(this.props.timing.functions).map(([funcName, func]) =>
+					<div className="function">
+						<div>function: {funcName}</div>
+						{this.displayTypes(func)}
+						{this.displayParameters(func)}
+						{this.displayTimes(func)}
+					</div>
+				)}
+			</div>
+		)
+	}
+
 	render() {
 		return (
 			<div className="Timing">
-				<h2 className="header">{'Functions found: '+Object.keys(this.props.timing).length}</h2>
 				<Loading status={this.props.status} />
-				<div className="content">
-					{this.displayFunctions(this.props.timing)}
-				</div>
+				{this.displayHeader()}
+				{this.displayContent()}
 			</div>
 		)
 	}

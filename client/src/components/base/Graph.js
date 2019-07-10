@@ -15,20 +15,11 @@ class Graph extends React.Component {
 				missingTimeIndexes.push(t)
 		}
 
-		if (missingTimeIndexes.length > 0) {
-			console.log(d)
-			console.log(missingTimeIndexes)
-		}
-
 		let start = 0, end
 		for (var i = 0; i < missingTimeIndexes.length + 1; i++) {
 			end = (i < missingTimeIndexes.length) ? (missingTimeIndexes[i] -1) : (d.length - 1)
 
-			if (missingTimeIndexes.length > 0) {
-				console.log(start+' '+end)
-			}
-
-			if (end-start <= 1) {
+			if (end === start) {
 				start = end + 2
 				continue
 			}
@@ -55,7 +46,7 @@ class Graph extends React.Component {
 			return []
 
 		start = start ? start : 0
-		end = end ? end : data.length
+		end = end ? end : (data.length - 1)
 
 		// SVG margin
 		let margin = 6
@@ -73,12 +64,12 @@ class Graph extends React.Component {
 		return points
 	}
 
-	pointToGraphPoint(index, data, point) {
-		if (!data[index])
-			return null
+	pointToGraphPoint(index, data, point, height) {
 		var coords = point.split(',')
 		var x = coords[0]
 		var y = coords[1]
+		if (!data[index])
+			return <text x={x} y={height} textAnchor="middle">Fail</text>
 		return (
 			<g className="dataPoint" key={index}>
 				<text x={x} y={y} textAnchor="middle">{data[index]}</text>
@@ -92,16 +83,16 @@ class Graph extends React.Component {
 
 		return (
 			Object.entries(points).map(([index, point]) => 
-				this.pointToGraphPoint(index, d, point)
+				this.pointToGraphPoint(index, d, point, h)
 			)
 		)
 	}
 
 	render() {
-		let w = this.props.width
-		let h = this.props.height
 		let d = Object.values(this.props.data)
 		let s = this.props.stepX
+		let w = this.props.width
+		let h = this.props.height
 
 		return (
 			<svg viewBox={"0 0 "+w+" "+h} className="graph" style={{width: w, height: h}}>

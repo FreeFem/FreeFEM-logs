@@ -8,6 +8,7 @@
 # testing
 /logs
 /coverage
+/unit
 /timing
 
 # production
