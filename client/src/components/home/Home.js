@@ -71,10 +71,10 @@ class Home extends React.Component {
         </div>
 				<div className="home-unittests" onClick={() => this.goto(UNITLOGS_URL)}>
           <h1>{UNITLOGS_NAME} report</h1>
-          <Loading status={this.props.status.unitlogs} />
+          <Loading status={this.props.status.unitLogs} />
 					<div className="home-grid">
 	          <div className="home-item">Successful tests:</div>
-						<div className="home-value">{this.props.unitlogs.validTests} / {this.props.unitlogs.totalTests}</div>
+						<div className="home-value">{this.props.unitLogs.validUnitTests} / {this.props.unitLogs.totalUnitTests}</div>
 					</div>
         </div>
         <div className="home-timing" onClick={() => this.goto(TIMING_URL)}>

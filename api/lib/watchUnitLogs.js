@@ -10,14 +10,6 @@ function loadUnitLogs () {
 	if (!fs.existsSync(UNIT_DIRECTORY))
     return
 
-	unitLogs = {
-		validUnitTests: 0,
-		totalUnitTests: 0,
-		failedTests: [],
-		logFiles: [],
-		logFilesContent: []
-	}
-
 	let directories = []
 	let logFiles = []
 
@@ -37,25 +29,31 @@ function loadUnitLogs () {
 		
 		dirPath = directories.shift();
 	} while (directories.length > 0)
-	
-	unitLogs.totalUnitTests = logFiles.length
-	unitLogs.logFiles = logFiles
-  
-  for (var f = 0; f < logFiles.length; f++) {
-		let filaPath = logFiles[f]
-		let fileContent = fs.readFileSync(filaPath, 'utf-8')
 
-		unitLogs.logFilesContent.push(fileContent)
+	let totalUnitTests = logFiles.length
+	let validUnitTests = 0
+	let failedTests = []
+	
+  for (var f = 0; f < logFiles.length; f++) {
+		let filePath = logFiles[f]
+		let fileContent = fs.readFileSync(filePath, 'utf-8')
 
 		if (fileContent.search('Ok: Normal End') !== -1)
-			unitLogs.validUnitTests++
+			validUnitTests++
 		else {
 			var fileName = logFiles[f].split('/').pop().split('.')[0]
-			unitLogs.failedTests.push(fileName)
+			failedTests.push(fileName)
 		}
 	}
 
-  console.log('unit logs loaded!')
+	unitLogs = {
+		validUnitTests: validUnitTests,
+		totalUnitTests: totalUnitTests,
+		failedTests: failedTests,
+		logFiles: logFiles
+	}
+
+	console.log('unit logs loaded!')
 }
 
 // Load unit logs at startup

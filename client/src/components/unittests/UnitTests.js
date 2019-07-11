@@ -10,24 +10,24 @@ class UnitTests extends React.Component {
 	}
 
 	displayHeader() {
-		if (!this.props.unitlogs)
+		if (!this.props.unitLogs)
 			return null
 		return (
 			<div className="header">
 				<div className="item">Successful tests: </div>
-				<div className="value">{this.props.unitlogs.validUnitTests+' / '+this.props.unitlogs.totalUnitTests}</div>
+				<div className="value">{this.props.unitLogs.validUnitTests+' / '+this.props.unitLogs.totalUnitTests}</div>
 			</div>
 		)
 	}
 
 	displayContent() {
-		if (!this.props.unitlogs || !this.props.unitlogs.failedTests)
+		if (!this.props.unitLogs || !this.props.unitLogs.failedTests)
 			return null
 		return (
 			<div className="content">
 				<div className>Failed tests: </div>
 				<div className="test-list">
-					{Object.values(this.props.unitlogs.failedTests).map(test =>
+					{Object.values(this.props.unitLogs.failedTests).map(test =>
 						<div className="test-item">{test}</div>
 					)}
 				</div>

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const UNIT_DIRECTORY = '../unit'
+const UNIT_DIRECTORY = /*'../unit'*/ '../../FreeFem-sources/unit'
 const TIMING_DIRECTORY = '../timing'
 const watchUnitLogs = require('./watchUnitLogs')
 
@@ -66,23 +66,19 @@ function loadTiming () {
 
 	let unitLogs = watchUnitLogs()
 
-	for (var f = 0; f < unitLogs.logFilesContent.length; f++) {
-		let fileContent = unitLogs.logFilesContent[f]
+	for (var f = 0; f < unitLogs.logFiles.length; f++) {
+		let filePath = unitLogs.logFiles[f]
+		let fileContent = fs.readFileSync(filePath, 'utf-8')
 
 		var lines = fileContent.split(/\n|\r/).filter(Boolean);
 
 		let lastFunc, lastType, lastFlag
-
-		//console.log()
-		//console.log(unitLogs.logFiles[f])
 
 		for (var i = 0; i < lines.length; i++) {
 			let line = lines[i]
 
 			if (!line || line[0] !== '_')
 				continue
-
-			//console.log(line)
 
 			var lineFlag = getFlag(line)
 			switch(lineFlag) {
@@ -143,7 +139,6 @@ function loadTiming () {
 								time = file.functions[fi].types[ti].times[t]
 							finalOutput.functions[fi].types[ti].times[t].push(time)
 						})
-						//console.log(finalOutput.functions[fi].types[ti].times[t])
 					}
 				}
 			}
@@ -160,7 +155,6 @@ function loadTiming () {
 								time = file.functions[fi].parameters[pi].times[t]
 							finalOutput.functions[fi].parameters[pi].times[t].push(time)
 						})
-						//console.log(finalOutput.functions[fi].parameters[pi].times[t])
 					}
 				}
 			}
@@ -175,7 +169,6 @@ function loadTiming () {
 						time = file.functions[fi].times[t]
 					finalOutput.functions[fi].times[t].push(time)
 				})
-				//console.log(finalOutput.functions[fi].times[t])
 			}
 		}
 	})

@@ -1,6 +1,10 @@
 import React from 'react'
 import './Graph.css'
 
+const CROSS = 4 // length of the axis that sticks out the graph
+const MARGIN_X = 15
+const MARGIN_Y = 15
+
 class Graph extends React.Component {
 	constructor(props) {
 		super(props)
@@ -47,11 +51,6 @@ class Graph extends React.Component {
 
 		start = start ? start : 0
 		end = end ? end : (data.length - 1)
-
-		// SVG margin
-		let margin = 6
-		width -= margin
-		height -= margin
 		
 		stepX = stepX ? stepX : (width/(data.length-1))
 		let maxValue = Math.max.apply(Math, data)
@@ -60,16 +59,21 @@ class Graph extends React.Component {
 		
 		let points = []
 		for (var d = start; d <= end; d++)
-			points.push((margin/2 + stepX*d) +','+ (margin/2 + height-(data[d]*height/maxValue)))
+			points.push((MARGIN_X + stepX*d) +','+ (MARGIN_Y + height-(data[d]*height/maxValue)))
 		return points
 	}
 
-	pointToGraphPoint(index, data, point, height) {
+	pointToGraphPoint(index, data, point, height, stepX) {
 		var coords = point.split(',')
 		var x = coords[0]
 		var y = coords[1]
 		if (!data[index])
-			return <text x={x} y={height} textAnchor="middle">Fail</text>
+			return (
+				<g className="failPoint" key={index}>
+					<rect x={MARGIN_X+stepX*index-stepX/2} y={MARGIN_Y} width={stepX} height={height} />
+					<text x={x} y={height} textAnchor="middle">Fail</text>
+				</g>
+			)
 		return (
 			<g className="dataPoint" key={index}>
 				<text x={x} y={y} textAnchor="middle">{data[index]}</text>
@@ -78,24 +82,35 @@ class Graph extends React.Component {
 		)
 	}
 
+	pp(x, y) {
+		return x+','+y+' '
+	}
+
 	drawGraphPoints(w, h, d, s) {
 		let points = this.dataToPoints(w, h, d, s)
 
 		return (
 			Object.entries(points).map(([index, point]) => 
-				this.pointToGraphPoint(index, d, point, h)
+				this.pointToGraphPoint(index, d, point, h, s)
 			)
 		)
 	}
 
 	render() {
 		let d = Object.values(this.props.data)
-		let s = this.props.stepX
-		let w = this.props.width
-		let h = this.props.height
+		let s = Number(this.props.stepX)
+		let w = Number(this.props.width)
+		let h = Number(this.props.height)
+		let svgW = w + (MARGIN_X*2)
+		let svgH = h + (MARGIN_Y*2)
 
 		return (
-			<svg viewBox={"0 0 "+w+" "+h} className="graph" style={{width: w, height: h}}>
+			<svg className="graph" viewBox={"0 0 "+svgW+" "+svgH} style={{width: svgW, height: svgH}}>
+				<rect className="background" x={MARGIN_X} y={MARGIN_Y} width={w} height={h}/>
+				<polyline className="x-axis" stroke-dasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
+					points={this.pp(MARGIN_X-CROSS, h+MARGIN_Y)+this.pp(w+MARGIN_X, h+MARGIN_Y)}/>
+				<polyline  className="y-axis" stroke-dasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
+					points={this.pp(MARGIN_X, h+MARGIN_Y+CROSS)+this.pp(MARGIN_X, MARGIN_Y)}/>
 				{this.drawGraphLine(w, h, d, s)}
 				{this.drawGraphPoints(w, h, d, s)}
 			</svg>

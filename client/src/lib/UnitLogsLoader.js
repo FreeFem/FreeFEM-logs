@@ -17,9 +17,9 @@ export function UnitLogsLoader (API, app) {
       ...prevState,
       status: {
         ...prevState.status,
-        unitlogs: ''
+        unitLogs: ''
       },
-      unitlogs: response
+      unitLogs: response
     }))
   })
   .catch(err => {

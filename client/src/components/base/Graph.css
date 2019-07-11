@@ -1,7 +1,10 @@
 .graph {
-  background: white;
-  border-left: 1px dotted #555;
-  border-bottom: 1px dotted #555;
+  
+}
+
+.graph .background {
+  fill: lightblue;
+  opacity: 0.75;
 }
 
 .dataPoint circle {
@@ -16,4 +19,13 @@
 
 .dataPoint:hover text {
   visibility: visible;
+}
+
+.failPoint text {
+  text-decoration-color: white;
+}
+
+.failPoint rect {
+  fill: lightcoral;
+  opacity: 1;
 }

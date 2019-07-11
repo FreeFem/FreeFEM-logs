@@ -27,12 +27,12 @@ class App extends React.Component {
       status: {
         logs: 'loading',
         coverage: 'loading',
-        unitlogs: 'loading',
+        unitLogs: 'loading',
         timing: 'loading'
       },
       logs: {},
       coverage: {},
-      unitlogs: {},
+      unitLogs: {},
       timing: {}
     }
   }
@@ -81,12 +81,12 @@ class App extends React.Component {
           <Route exact path={HOME_URL} render={(props) => <Home {...props} status={this.state.status}
             logs={this.state.logs}
             coverage={this.state.coverage}
-            unitlogs={this.state.unitlogs}
+            unitLogs={this.state.unitLogs}
             timing={this.state.timing} />}
           />
           <Route path={LOGS_URL} render={(props) => <Logs {...props} status={this.state.status.logs} logs={this.state.logs} />} />
           <Route path={COVERAGE_URL} render={(props) => <Coverage {...props} status={this.state.status.coverage} coverage={this.state.coverage} />} />
-          <Route path={UNITLOGS_URL} render={(props) => <UnitTests {...props} status={this.state.status.unitlogs} unitlogs={this.state.unitlogs} />} />
+          <Route path={UNITLOGS_URL} render={(props) => <UnitTests {...props} status={this.state.status.unitLogs} unitLogs={this.state.unitLogs} />} />
           <Route path={TIMING_URL} render={(props) => <Timing {...props} status={this.state.status.timing} timing={this.state.timing} />} />
         </div>
         <Footer />

@@ -2,8 +2,7 @@ import React from 'react'
 import './Timing.css'
 
 import Loading from '../base/Loading'
-import Graph from '../base/Graph';
-import { throws } from 'assert';
+import Graph from '../base/Graph'
 
 class Timing extends React.Component {
 	constructor(props) {
@@ -47,7 +46,7 @@ class Timing extends React.Component {
 		return (
 			<div className="time">
 				{Object.values(obj.times).map(timeValues =>
-					<Graph width="1000" height="30" data={timeValues} stepX="50"/>
+					<Graph width="1000" height="50" data={timeValues} stepX="50"/>
 				)}
 			</div>
 		)
