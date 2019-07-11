@@ -2,7 +2,7 @@ import React from 'react'
 import './Graph.css'
 
 const CROSS = 4 // length of the axis that sticks out the graph
-const MARGIN_X = 15
+const MARGIN_X = 30
 const MARGIN_Y = 15
 
 class Graph extends React.Component {
@@ -34,12 +34,13 @@ class Graph extends React.Component {
 		}
 
 		return (
-			Object.values(linesPoints).map(linePoints =>
+			Object.values(linesPoints).map((linePoints, index) =>
 				<polyline
 					fill="none"
 					stroke="#0074d9"
 					strokeWidth="2"
 					points={linePoints}
+					key={index}
 				/>
 			)
 		)
@@ -70,7 +71,7 @@ class Graph extends React.Component {
 		if (!data[index])
 			return (
 				<g className="failPoint" key={index}>
-					<rect x={MARGIN_X+stepX*index-stepX/2} y={MARGIN_Y} width={stepX} height={height} />
+					<rect x={x-stepX/4} y={height-stepX/4} width={stepX/2} height={stepX/4} />
 					<text x={x} y={height} textAnchor="middle">Fail</text>
 				</g>
 			)
@@ -99,7 +100,7 @@ class Graph extends React.Component {
 	render() {
 		let d = Object.values(this.props.data)
 		let s = Number(this.props.stepX)
-		let w = Number(this.props.width)
+		let w = s*d.length
 		let h = Number(this.props.height)
 		let svgW = w + (MARGIN_X*2)
 		let svgH = h + (MARGIN_Y*2)
@@ -107,9 +108,9 @@ class Graph extends React.Component {
 		return (
 			<svg className="graph" viewBox={"0 0 "+svgW+" "+svgH} style={{width: svgW, height: svgH}}>
 				<rect className="background" x={MARGIN_X} y={MARGIN_Y} width={w} height={h}/>
-				<polyline className="x-axis" stroke-dasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
+				<polyline className="x-axis" strokeDasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
 					points={this.pp(MARGIN_X-CROSS, h+MARGIN_Y)+this.pp(w+MARGIN_X, h+MARGIN_Y)}/>
-				<polyline  className="y-axis" stroke-dasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
+				<polyline  className="y-axis" strokeDasharray="4, 1" fill="none" stroke="#555" strokeWidth="2"
 					points={this.pp(MARGIN_X, h+MARGIN_Y+CROSS)+this.pp(MARGIN_X, MARGIN_Y)}/>
 				{this.drawGraphLine(w, h, d, s)}
 				{this.drawGraphPoints(w, h, d, s)}

@@ -25,10 +25,10 @@ class UnitTests extends React.Component {
 			return null
 		return (
 			<div className="content">
-				<div className>Failed tests: </div>
+				<div>Failed tests: </div>
 				<div className="test-list">
-					{Object.values(this.props.unitLogs.failedTests).map(test =>
-						<div className="test-item">{test}</div>
+					{Object.values(this.props.unitLogs.failedTests).map((test, index) =>
+						<div className="test-item" key={index}>{test}</div>
 					)}
 				</div>
 			</div>

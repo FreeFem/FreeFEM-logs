@@ -41,8 +41,8 @@ function loadUnitLogs () {
 		if (fileContent.search('Ok: Normal End') !== -1)
 			validUnitTests++
 		else {
-			var fileName = logFiles[f].split('/').pop().split('.')[0]
-			failedTests.push(fileName)
+			var fileName = logFiles[f].split('/')
+			failedTests.push('/'+fileName[fileName.length-2]+'/'+fileName[fileName.length-1])
 		}
 	}
 
@@ -58,6 +58,9 @@ function loadUnitLogs () {
 
 // Load unit logs at startup
 loadUnitLogs()
+fs.watch(UNIT_DIRECTORY, curr => {
+  loadUnitLogs()
+})
 
 function getUnitLogs() {
   return unitLogs

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const UNIT_DIRECTORY = /*'../unit'*/ '../../FreeFem-sources/unit'
+const UNIT_DIRECTORY = '../unit' 
 const TIMING_DIRECTORY = '../timing'
 const watchUnitLogs = require('./watchUnitLogs')
 
@@ -111,8 +111,8 @@ function loadTiming () {
 	}
 
 	// Output current timing into timing folder
-	let unitTestsDirStats = fs.lstatSync(UNIT_DIRECTORY)
-	let timingReportPath = TIMING_DIRECTORY + '/' + unitTestsDirStats.dev + '.json'
+	let unitDirStats = fs.lstatSync(UNIT_DIRECTORY)
+	let timingReportPath = TIMING_DIRECTORY + '/' + unitDirStats.dev + '.json'
 	fs.writeFileSync(timingReportPath, JSON.stringify(output, null, 2))
 
 	let timingFiles = fs.readdirSync(TIMING_DIRECTORY)
@@ -179,6 +179,9 @@ function loadTiming () {
 
 // Load timing at startup
 loadTiming()
+fs.watch(UNIT_DIRECTORY, curr => {
+  loadTiming()
+})
 
 function getTimingData() {
   return timingData
