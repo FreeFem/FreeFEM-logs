@@ -32,7 +32,8 @@ function loadUnitLogs () {
 
 	let totalUnitTests = logFiles.length
 	let validUnitTests = 0
-	let failedTests = []
+	let failedUnitTests = 0
+	let failedTestsPaths = {}
 	
   for (var f = 0; f < logFiles.length; f++) {
 		let filePath = logFiles[f]
@@ -41,16 +42,23 @@ function loadUnitLogs () {
 		if (fileContent.search('Ok: Normal End') !== -1)
 			validUnitTests++
 		else {
-			var fileName = logFiles[f].split('/')
-			failedTests.push('/'+fileName[fileName.length-2]+'/'+fileName[fileName.length-1])
+			failedUnitTests++
+			var fPath = logFiles[f].split('/')
+			var directory = fPath[fPath.length-2]
+			var logFile = fPath[fPath.length-1]
+			var fileName = logFile.replace(path.extname(logFile), '')
+			if (!failedTestsPaths[directory])
+				failedTestsPaths[directory] = []
+			failedTestsPaths[directory].push(directory+'/'+fileName)
 		}
 	}
 
 	unitLogs = {
-		validUnitTests: validUnitTests,
 		totalUnitTests: totalUnitTests,
-		failedTests: failedTests,
-		logFiles: logFiles
+		validUnitTests: validUnitTests,
+		failedUnitTests: failedUnitTests,
+		failedPaths: failedTestsPaths,
+		files: logFiles
 	}
 
 	console.log('unit logs loaded!')

@@ -3,6 +3,8 @@ import './UnitTests.css'
 
 import Loading from '../base/Loading'
 
+const gitUnitTestsRepo = 'https://github.com/FreeFem/FreeFem-sources/tree/feature-unittests/unit/'
+
 class UnitTests extends React.Component {
 	constructor(props) {
 		super(props)
@@ -21,16 +23,23 @@ class UnitTests extends React.Component {
 	}
 
 	displayContent() {
-		if (!this.props.unitLogs || !this.props.unitLogs.failedTests)
+		if (!this.props.unitLogs || !this.props.unitLogs.failedUnitTests || !this.props.unitLogs.failedPaths)
 			return null
 		return (
 			<div className="content">
-				<div>Failed tests: </div>
-				<div className="test-list">
-					{Object.values(this.props.unitLogs.failedTests).map((test, index) =>
-						<div className="test-item" key={index}>{test}</div>
-					)}
-				</div>
+				<div className="title">Failed tests: ({this.props.unitLogs.failedUnitTests})</div>
+				{Object.entries(this.props.unitLogs.failedPaths).map(([dirName, dir]) =>
+					<div className="directory" key={dirName}>
+						<div className="name">{dirName}</div>
+						<div className="files">
+							{Object.values(dir).map(file =>
+								<div key={file}>
+									<a target="_blank" rel="noopener noreferrer" href={gitUnitTestsRepo+file}>{file.split('/').pop()}</a>
+								</div>
+							)}
+						</div>
+					</div>
+				)}
 			</div>
 		)
 	}
@@ -38,8 +47,8 @@ class UnitTests extends React.Component {
 	render() {
 		return (
 			<div className="UnitTests">
-				<Loading status={this.props.status} />
 				{this.displayHeader()}
+				<Loading status={this.props.status} />
 				{this.displayContent()}
 			</div>
 		)

@@ -159,6 +159,13 @@ class Coverage extends React.Component {
 		)
 	}
 
+	/*
+	sortByLineCoverageI([a, objA], [b, objB]) {return objA.linesCovered-objB.linesCovered}
+	sortByLineCoverageD([a, objA], [b, objB]) {return -(objA.linesCovered-objB.linesCovered)}
+	sortByFunctionCoverageI([a, objA], [b, objB]) {return objA.functionsCovered-objB.functionsCovered}
+	sortByFunctionCoverageD([a, objA], [b, objB]) {return -(objA.functionsCovered-objB.functionsCovered)}
+	*/
+
 	render() {
 		const currentURL = this.props.location.pathname
 		let path = currentURL.split('/')
@@ -182,7 +189,6 @@ class Coverage extends React.Component {
 				<div className="previous">
 					{COVERAGE_NAME}
 				</div>
-			//([A, dirA], [B, dirB]) => dirA.linesCovered-dirB.linesCovered
 			content =
 				Object.entries(directories).sort().map(([dirName, dir]) =>
 					<div key={dirName}>

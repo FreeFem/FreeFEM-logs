@@ -1,11 +1,29 @@
 .Timing {
   width: 100%;
-  height: 100%;
   overflow: auto;
 }
 
-.Timing .header {
-  padding-bottom: 1rem;
+.Timing .search-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.Timing .search-bar > div {
+  margin: 0.5em;
+}
+
+.Timing .header .grid {
+  display: grid;
+  grid-template-columns: max-content min-content;
+}
+
+.Timing .header .item {
+  padding: 0.5rem;
+  font-weight: bold;
+}
+
+.Timing .header .value {
+  padding: 0.5rem;
 }
 
 .Timing .content {
@@ -14,23 +32,25 @@
 }
 
 .Timing .function {
-  padding: 0.5em;
-  border-left-style: solid;
-}
-
-.Timing .parameter {
-  padding: 0.5em;
-  border-left-style: solid;
+  margin: 1em;
 }
 
 .Timing .type {
+  margin-left: 0.5em;
+  border-left: 2px gray solid;
   padding: 0.5em;
-  border-left-style: solid;
 }
 
-.Timing .time {
+.Timing .parameter {
+  margin-left: 0.5em;
+  border-left: 2px gray solid;
+  padding: 0.5em;
+}
+
+.Timing .times {
+  margin-left: 0.5em;
+  border-left: 2px gray solid;
+  padding-left: 0.5em;
   display: flex;
   flex-direction: column;
-  padding: 0.5em;
-  border-left-style: solid;
 }

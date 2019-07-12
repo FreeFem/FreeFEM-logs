@@ -19,7 +19,7 @@
   grid-template-columns: max-content auto;
 }
 
-.Home div.home-grid > div {
+.Home div.home-grid > .home-item,.home-value {
   padding: 0.5rem;
 }
 
@@ -42,7 +42,7 @@
   border: 2px solid;
 }
 
-.home-logs a {
+.Home .home-logs a {
   display: block;
   color: black;
   text-decoration: none;
@@ -51,7 +51,23 @@
   border: 2px solid;
 }
 
-.home-logs .home-value {
+.Home .home-logs .home-value {
   display: flex;
   flex-wrap: wrap;
+}
+
+.Home .home-coverage .low {
+	background-color: rgba(250, 0, 0, 0.75);
+}
+
+.Home .home-coverage .med {
+	background-color: rgba(255, 255, 0, 0.75);
+}
+
+.Home .home-coverage .hi {
+	background-color: rgba(0, 255, 0, 0.75);
+}
+
+.Home .home-value > span {
+  padding: 0.3em;
 }

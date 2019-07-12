@@ -13,14 +13,14 @@ export function CoverageLoader(API, app) {
         error: 'Unable to load coverage (API status: error)'
       }))
       
-      app.setState(prevState => ({
-        ...prevState,
-        status: {
-  				...prevState.status,
-  				coverage: ''
-  			},
-        coverage: response
-      }))
+    app.setState(prevState => ({
+      ...prevState,
+      status: {
+        ...prevState.status,
+        coverage: ''
+      },
+      coverage: response
+    }))
   })
   .catch(err => {
     app.setState(prevState => ({

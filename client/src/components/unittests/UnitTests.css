@@ -22,10 +22,24 @@
   padding: 0.5em;
 }
 
-.UnitTests .test-list {
+.UnitTests .content .title {
+  font-weight: bold;
+}
+
+.UnitTests .directory {
   margin: 1em;
 }
 
-.UnitTests .test-item {
-  margin-bottom: 0.2em;
+.UnitTests .directory > .name {
+  margin-bottom: 0.5em;
+}
+
+.UnitTests .files {
+  margin-left: 0.5em;
+  padding-left: 0.5em;
+  border-left: 2px gray solid;
+}
+
+.UnitTests .files > a {
+  text-decoration: none;
 }

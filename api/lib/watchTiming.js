@@ -23,13 +23,9 @@ function getValue(line) {
 function addFunc(functions, line) {
 	var funcName = getValue(line)
 	var func = funcName
-	if (functions[funcName]) { // function already exists (duplicate or same name!)
-		let i = 2
-		while (functions[func]) {
-			func = funcName+'('+i+')'
-			i++
-		}
-	}
+	if (functions[funcName]) // function already exists (duplicate or same name!)
+		for (var i = 2; functions[func]; i++)
+			func = funcName+' ('+i+')'
 	functions[func] = {}
 	return functions[func]
 }
@@ -56,6 +52,13 @@ function addTime(obj, line) {
 	obj.times.push(getValue(line))
 }
 
+// compare current time value to last
+function computeTimeDelta(times) {
+	if (times.length <= 1)
+		return 0
+	return Math.abs(times[times.length-2] - times[times.length-1])
+}
+
 
 function loadTiming () {
 	console.log('loading timing...')
@@ -66,8 +69,8 @@ function loadTiming () {
 
 	let unitLogs = watchUnitLogs()
 
-	for (var f = 0; f < unitLogs.logFiles.length; f++) {
-		let filePath = unitLogs.logFiles[f]
+	for (var f = 0; f < unitLogs.files.length; f++) {
+		let filePath = unitLogs.files[f]
 		let fileContent = fs.readFileSync(filePath, 'utf-8')
 
 		var lines = fileContent.split(/\n|\r/).filter(Boolean);
@@ -112,7 +115,7 @@ function loadTiming () {
 
 	// Output current timing into timing folder
 	let unitDirStats = fs.lstatSync(UNIT_DIRECTORY)
-	let timingReportPath = TIMING_DIRECTORY + '/' + unitDirStats.dev + '.json'
+	let timingReportPath = TIMING_DIRECTORY + '/' + unitDirStats.mtime.getTime() + '.json'
 	fs.writeFileSync(timingReportPath, JSON.stringify(output, null, 2))
 
 	let timingFiles = fs.readdirSync(TIMING_DIRECTORY)
@@ -126,7 +129,9 @@ function loadTiming () {
 	// deep copy of the first timing report
 	let finalOutput = JSON.parse(JSON.stringify(timingFilesData[0]))
 
-	Object.entries(finalOutput.functions).map(([fi, func]) => {
+	Object.keys(finalOutput.functions).map(fi => {
+		finalOutput.functions[fi].maxTimeDelta = 0
+		finalOutput.functions[fi].timeDeltas = []
 		if (finalOutput.functions[fi].types) {
 			// for each type
 			for (var ti = 0; ti < finalOutput.functions[fi].types.length; ti++) {
@@ -139,6 +144,7 @@ function loadTiming () {
 								time = file.functions[fi].types[ti].times[t]
 							finalOutput.functions[fi].types[ti].times[t].push(time)
 						})
+						finalOutput.functions[fi].timeDeltas.push(computeTimeDelta(finalOutput.functions[fi].types[ti].times[t]))
 					}
 				}
 			}
@@ -155,6 +161,7 @@ function loadTiming () {
 								time = file.functions[fi].parameters[pi].times[t]
 							finalOutput.functions[fi].parameters[pi].times[t].push(time)
 						})
+						finalOutput.functions[fi].timeDeltas.push(computeTimeDelta(finalOutput.functions[fi].parameters[pi].times[t]))
 					}
 				}
 			}
@@ -169,11 +176,21 @@ function loadTiming () {
 						time = file.functions[fi].times[t]
 					finalOutput.functions[fi].times[t].push(time)
 				})
+				finalOutput.functions[fi].timeDeltas.push(computeTimeDelta(finalOutput.functions[fi].times[t]))
 			}
 		}
+		finalOutput.functions[fi].timeDeltas = finalOutput.functions[fi].timeDeltas.filter(d => d)
+		if (finalOutput.functions[fi].timeDeltas.length > 0)
+			finalOutput.functions[fi].maxTimeDelta = Math.max.apply(Math, finalOutput.functions[fi].timeDeltas)
+		else
+			finalOutput.functions[fi].maxTimeDelta = 0
 	})
 
-	timingData = finalOutput
+	timingData = {
+		timingReports: timingFiles,
+		functions: finalOutput.functions
+	}
+	
 	console.log('timing loaded!')
 }
 

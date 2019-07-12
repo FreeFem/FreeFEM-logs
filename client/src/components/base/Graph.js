@@ -15,24 +15,29 @@ class Graph extends React.Component {
 		let linesPoints = []
 		let missingTimeIndexes = []
 		for (var t = 0; t < d.length; t++) {
-			if (d[t] === null)
+			if (d[t] === null || d[t] === '')
 				missingTimeIndexes.push(t)
 		}
 
-		let start = 0, end
+		let firstValidValue = d.findIndex(i => (i !== null && i !== ''))
+		if (firstValidValue === -1)
+			return null
+		let start = firstValidValue
+		let end
+
 		for (var i = 0; i < missingTimeIndexes.length + 1; i++) {
 			end = (i < missingTimeIndexes.length) ? (missingTimeIndexes[i] -1) : (d.length - 1)
 
 			if (end === start) {
-				start = end + 2
+				start = end +2
 				continue
 			}
 
 			var points = this.dataToPoints(w, h, d, s, start, end)
 			linesPoints.push(points)
-			start = end + 2
+			start = end
 		}
-
+		
 		return (
 			Object.values(linesPoints).map((linePoints, index) =>
 				<polyline

@@ -10,7 +10,8 @@ import {
 	LOGS_NAME, COVERAGE_NAME, UNITLOGS_NAME, TIMING_NAME,
 	LOGS_URL, COVERAGE_URL, UNITLOGS_URL, TIMING_URL,
 	LOGS_MID_LIMIT, LOGS_HI_LIMIT,
-	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR
+	LOGS_ZERO_COLOR, LOGS_LOW_COLOR, LOGS_MID_COLOR, LOGS_HI_COLOR,
+	COVERAGE_MID_LIMIT, COVERAGE_HI_LIMIT
 } from '../../config/Config'
 
 class Home extends React.Component {
@@ -26,6 +27,12 @@ class Home extends React.Component {
 			...prevState,
 			redirect: url
 		}))
+	}
+
+	getCoverageClass(val) {
+		if (val < COVERAGE_MID_LIMIT) return 'low'
+		if (val >= COVERAGE_MID_LIMIT && val < COVERAGE_HI_LIMIT) return 'med'
+		if (val >= COVERAGE_HI_LIMIT) return 'hi'
 	}
 	
 	render() {
@@ -46,7 +53,7 @@ class Home extends React.Component {
 							<span style={{borderColor: LOGS_ZERO_COLOR}}>0 fail</span>
 							<span style={{borderColor: LOGS_LOW_COLOR}}>&lt; {LOGS_MID_LIMIT} fail</span>
 							<span style={{borderColor: LOGS_MID_COLOR}}>&lt; {LOGS_HI_LIMIT} fail</span>
-							<span style={{borderColor: LOGS_HI_COLOR}}>&gt; {LOGS_HI_LIMIT} fail</span>
+							<span style={{borderColor: LOGS_HI_COLOR}}>&gt;= {LOGS_HI_LIMIT} fail</span>
 						</p>
 					</div>
           <div className="home-item">
@@ -64,9 +71,13 @@ class Home extends React.Component {
 	          <div className="home-item">Last run:</div>
 						<div className="home-value">{this.props.coverage.date}</div>
 						<div className="home-item">Lines covered:</div>
-						<div className="home-value">{this.props.coverage.linesCovered}% ({this.props.coverage.nbLinesHit} / {this.props.coverage.nbLines})</div>
+						<div className="home-value">
+							<span className={this.getCoverageClass(this.props.coverage.linesCovered)}>{this.props.coverage.linesCovered}% ({this.props.coverage.nbLinesHit} / {this.props.coverage.nbLines})</span>
+						</div>
 						<div className="home-item">Functions covered:</div>
-						<div className="home-value">{this.props.coverage.functionsCovered}% ({this.props.coverage.nbFunctionsHit} / {this.props.coverage.nbFunctions})</div>
+						<div className="home-value">
+							<span className={this.getCoverageClass(this.props.coverage.functionsCovered)}>{this.props.coverage.functionsCovered}% ({this.props.coverage.nbFunctionsHit} / {this.props.coverage.nbFunctions})</span>
+						</div>
 					</div>
         </div>
 				<div className="home-unittests" onClick={() => this.goto(UNITLOGS_URL)}>
