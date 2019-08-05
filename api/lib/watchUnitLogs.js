@@ -10,13 +10,12 @@ function loadUnitLogs () {
 	if (!fs.existsSync(UNIT_DIRECTORY))
     return
 
-	let directories = []
 	let logFiles = []
-
-	let dirPath = UNIT_DIRECTORY
+	let directories = [UNIT_DIRECTORY]
 
 	do {
 		var dirOrFiles = []
+		let dirPath = directories.shift();
 		var dirContent = fs.readdirSync(dirPath)
 		dirContent.forEach(elt => {
 			dirOrFiles.push(dirPath+'/'+elt)
@@ -27,7 +26,7 @@ function loadUnitLogs () {
 		// get directories
 		dirOrFiles.filter(elt => fs.lstatSync(elt).isDirectory()).forEach(dir => directories.push(dir))
 		
-		dirPath = directories.shift();
+		
 	} while (directories.length > 0)
 
 	let totalUnitTests = logFiles.length
